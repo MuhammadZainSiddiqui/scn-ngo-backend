@@ -42,6 +42,10 @@ const startServer = async () => {
       console.log('   - POST /api/volunteers');
       console.log('   - GET  /api/assignments');
       console.log('   - POST /api/assignments');
+      console.log('   - GET  /api/programs');
+      console.log('   - POST /api/programs');
+      console.log('   - GET  /api/kpis');
+      console.log('   - POST /api/kpis');
       console.log('   - GET  /api/health');
     });
 
