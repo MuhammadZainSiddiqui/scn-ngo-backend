@@ -1771,3 +1771,687 @@ export const allocateSubsidyValidation = [
     .toFloat(),
   handleValidationErrors,
 ];
+
+// ============================================
+// VENDOR VALIDATORS
+// ============================================
+
+export const createVendorValidation = [
+  body('name')
+    .trim()
+    .notEmpty()
+    .withMessage('Vendor name is required')
+    .isLength({ max: 255 })
+    .withMessage('Vendor name cannot exceed 255 characters'),
+  body('type')
+    .optional()
+    .isIn(['goods', 'services', 'both'])
+    .withMessage('Vendor type must be goods, services, or both'),
+  body('category')
+    .optional()
+    .trim()
+    .isLength({ max: 100 })
+    .withMessage('Category cannot exceed 100 characters'),
+  body('contact_person')
+    .optional()
+    .trim()
+    .isLength({ max: 100 })
+    .withMessage('Contact person cannot exceed 100 characters'),
+  body('email')
+    .optional()
+    .isEmail()
+    .withMessage('Please provide a valid email')
+    .normalizeEmail(),
+  body('phone')
+    .optional()
+    .trim()
+    .isLength({ min: 7, max: 20 })
+    .withMessage('Phone must be between 7 and 20 characters'),
+  body('alternate_phone')
+    .optional()
+    .trim()
+    .isLength({ min: 7, max: 20 })
+    .withMessage('Alternate phone must be between 7 and 20 characters'),
+  body('address_line1')
+    .optional()
+    .trim()
+    .isLength({ max: 255 })
+    .withMessage('Address line 1 cannot exceed 255 characters'),
+  body('address_line2')
+    .optional()
+    .trim()
+    .isLength({ max: 255 })
+    .withMessage('Address line 2 cannot exceed 255 characters'),
+  body('city')
+    .optional()
+    .trim()
+    .isLength({ max: 100 })
+    .withMessage('City cannot exceed 100 characters'),
+  body('state')
+    .optional()
+    .trim()
+    .isLength({ max: 100 })
+    .withMessage('State cannot exceed 100 characters'),
+  body('postal_code')
+    .optional()
+    .trim()
+    .isLength({ max: 20 })
+    .withMessage('Postal code cannot exceed 20 characters'),
+  body('country')
+    .optional()
+    .trim()
+    .isLength({ max: 100 })
+    .withMessage('Country cannot exceed 100 characters'),
+  body('gstin')
+    .optional()
+    .trim()
+    .isLength({ max: 20 })
+    .withMessage('GSTIN cannot exceed 20 characters'),
+  body('pan_number')
+    .optional()
+    .trim()
+    .isLength({ max: 20 })
+    .withMessage('PAN number cannot exceed 20 characters'),
+  body('payment_terms')
+    .optional()
+    .trim()
+    .isLength({ max: 100 })
+    .withMessage('Payment terms cannot exceed 100 characters'),
+  body('credit_limit')
+    .optional()
+    .isFloat({ min: 0 })
+    .withMessage('Credit limit must be a non-negative number')
+    .toFloat(),
+  body('bank_name')
+    .optional()
+    .trim()
+    .isLength({ max: 100 })
+    .withMessage('Bank name cannot exceed 100 characters'),
+  body('bank_account_number')
+    .optional()
+    .trim()
+    .isLength({ max: 50 })
+    .withMessage('Bank account number cannot exceed 50 characters'),
+  body('bank_ifsc')
+    .optional()
+    .trim()
+    .isLength({ max: 20 })
+    .withMessage('Bank IFSC cannot exceed 20 characters'),
+  body('status')
+    .optional()
+    .isIn(['active', 'inactive', 'blacklisted'])
+    .withMessage('Status must be active, inactive, or blacklisted'),
+  body('vertical_id')
+    .optional()
+    .isInt({ min: 1 })
+    .withMessage('Vertical ID must be a positive integer'),
+  body('notes')
+    .optional()
+    .trim()
+    .isLength({ max: 1000 })
+    .withMessage('Notes cannot exceed 1000 characters'),
+  handleValidationErrors,
+];
+
+export const updateVendorValidation = [
+  body('name')
+    .optional()
+    .trim()
+    .notEmpty()
+    .withMessage('Vendor name cannot be empty')
+    .isLength({ max: 255 })
+    .withMessage('Vendor name cannot exceed 255 characters'),
+  body('type')
+    .optional()
+    .isIn(['goods', 'services', 'both'])
+    .withMessage('Vendor type must be goods, services, or both'),
+  body('category')
+    .optional()
+    .trim()
+    .isLength({ max: 100 })
+    .withMessage('Category cannot exceed 100 characters'),
+  body('contact_person')
+    .optional()
+    .trim()
+    .isLength({ max: 100 })
+    .withMessage('Contact person cannot exceed 100 characters'),
+  body('email')
+    .optional()
+    .isEmail()
+    .withMessage('Please provide a valid email')
+    .normalizeEmail(),
+  body('phone')
+    .optional()
+    .trim()
+    .isLength({ min: 7, max: 20 })
+    .withMessage('Phone must be between 7 and 20 characters'),
+  body('alternate_phone')
+    .optional()
+    .trim()
+    .isLength({ min: 7, max: 20 })
+    .withMessage('Alternate phone must be between 7 and 20 characters'),
+  body('address_line1')
+    .optional()
+    .trim()
+    .isLength({ max: 255 })
+    .withMessage('Address line 1 cannot exceed 255 characters'),
+  body('address_line2')
+    .optional()
+    .trim()
+    .isLength({ max: 255 })
+    .withMessage('Address line 2 cannot exceed 255 characters'),
+  body('city')
+    .optional()
+    .trim()
+    .isLength({ max: 100 })
+    .withMessage('City cannot exceed 100 characters'),
+  body('state')
+    .optional()
+    .trim()
+    .isLength({ max: 100 })
+    .withMessage('State cannot exceed 100 characters'),
+  body('postal_code')
+    .optional()
+    .trim()
+    .isLength({ max: 20 })
+    .withMessage('Postal code cannot exceed 20 characters'),
+  body('country')
+    .optional()
+    .trim()
+    .isLength({ max: 100 })
+    .withMessage('Country cannot exceed 100 characters'),
+  body('gstin')
+    .optional()
+    .trim()
+    .isLength({ max: 20 })
+    .withMessage('GSTIN cannot exceed 20 characters'),
+  body('pan_number')
+    .optional()
+    .trim()
+    .isLength({ max: 20 })
+    .withMessage('PAN number cannot exceed 20 characters'),
+  body('payment_terms')
+    .optional()
+    .trim()
+    .isLength({ max: 100 })
+    .withMessage('Payment terms cannot exceed 100 characters'),
+  body('credit_limit')
+    .optional()
+    .isFloat({ min: 0 })
+    .withMessage('Credit limit must be a non-negative number')
+    .toFloat(),
+  body('bank_name')
+    .optional()
+    .trim()
+    .isLength({ max: 100 })
+    .withMessage('Bank name cannot exceed 100 characters'),
+  body('bank_account_number')
+    .optional()
+    .trim()
+    .isLength({ max: 50 })
+    .withMessage('Bank account number cannot exceed 50 characters'),
+  body('bank_ifsc')
+    .optional()
+    .trim()
+    .isLength({ max: 20 })
+    .withMessage('Bank IFSC cannot exceed 20 characters'),
+  body('status')
+    .optional()
+    .isIn(['active', 'inactive', 'blacklisted'])
+    .withMessage('Status must be active, inactive, or blacklisted'),
+  body('rating')
+    .optional()
+    .isFloat({ min: 1, max: 5 })
+    .withMessage('Rating must be between 1 and 5')
+    .toFloat(),
+  body('vertical_id')
+    .optional()
+    .isInt({ min: 1 })
+    .withMessage('Vertical ID must be a positive integer'),
+  body('notes')
+    .optional()
+    .trim()
+    .isLength({ max: 1000 })
+    .withMessage('Notes cannot exceed 1000 characters'),
+  handleValidationErrors,
+];
+
+export const updateVendorStatusValidation = [
+  body('status')
+    .notEmpty()
+    .isIn(['active', 'inactive', 'blacklisted'])
+    .withMessage('Status must be active, inactive, or blacklisted'),
+  handleValidationErrors,
+];
+
+// ============================================
+// REQUISITION VALIDATORS
+// ============================================
+
+export const createRequisitionValidation = [
+  body('title')
+    .trim()
+    .notEmpty()
+    .withMessage('Requisition title is required')
+    .isLength({ max: 255 })
+    .withMessage('Title cannot exceed 255 characters'),
+  body('description')
+    .optional()
+    .trim()
+    .isLength({ max: 5000 })
+    .withMessage('Description cannot exceed 5000 characters'),
+  body('purpose')
+    .optional()
+    .trim()
+    .isLength({ max: 2000 })
+    .withMessage('Purpose cannot exceed 2000 characters'),
+  body('vertical_id')
+    .notEmpty()
+    .isInt({ min: 1 })
+    .withMessage('Vertical ID is required and must be a positive integer'),
+  body('program_id')
+    .optional()
+    .isInt({ min: 1 })
+    .withMessage('Program ID must be a positive integer'),
+  body('department')
+    .optional()
+    .trim()
+    .isLength({ max: 100 })
+    .withMessage('Department cannot exceed 100 characters'),
+  body('priority')
+    .optional()
+    .isIn(['low', 'medium', 'high', 'urgent'])
+    .withMessage('Priority must be low, medium, high, or urgent'),
+  body('notes')
+    .optional()
+    .trim()
+    .isLength({ max: 1000 })
+    .withMessage('Notes cannot exceed 1000 characters'),
+  handleValidationErrors,
+];
+
+export const updateRequisitionValidation = [
+  body('title')
+    .optional()
+    .trim()
+    .notEmpty()
+    .withMessage('Title cannot be empty')
+    .isLength({ max: 255 })
+    .withMessage('Title cannot exceed 255 characters'),
+  body('description')
+    .optional()
+    .trim()
+    .isLength({ max: 5000 })
+    .withMessage('Description cannot exceed 5000 characters'),
+  body('purpose')
+    .optional()
+    .trim()
+    .isLength({ max: 2000 })
+    .withMessage('Purpose cannot exceed 2000 characters'),
+  body('program_id')
+    .optional()
+    .isInt({ min: 1 })
+    .withMessage('Program ID must be a positive integer'),
+  body('department')
+    .optional()
+    .trim()
+    .isLength({ max: 100 })
+    .withMessage('Department cannot exceed 100 characters'),
+  body('priority')
+    .optional()
+    .isIn(['low', 'medium', 'high', 'urgent'])
+    .withMessage('Priority must be low, medium, high, or urgent'),
+  body('notes')
+    .optional()
+    .trim()
+    .isLength({ max: 1000 })
+    .withMessage('Notes cannot exceed 1000 characters'),
+  handleValidationErrors,
+];
+
+export const addRequisitionItemValidation = [
+  body('item_name')
+    .trim()
+    .notEmpty()
+    .withMessage('Item name is required')
+    .isLength({ max: 255 })
+    .withMessage('Item name cannot exceed 255 characters'),
+  body('description')
+    .optional()
+    .trim()
+    .isLength({ max: 1000 })
+    .withMessage('Description cannot exceed 1000 characters'),
+  body('quantity')
+    .notEmpty()
+    .isInt({ min: 1 })
+    .withMessage('Quantity is required and must be a positive integer')
+    .toInt(),
+  body('unit')
+    .trim()
+    .notEmpty()
+    .withMessage('Unit is required')
+    .isLength({ max: 50 })
+    .withMessage('Unit cannot exceed 50 characters'),
+  body('estimated_unit_cost')
+    .optional()
+    .isFloat({ min: 0 })
+    .withMessage('Estimated unit cost must be a non-negative number')
+    .toFloat(),
+  body('actual_unit_cost')
+    .optional()
+    .isFloat({ min: 0 })
+    .withMessage('Actual unit cost must be a non-negative number')
+    .toFloat(),
+  body('received_quantity')
+    .optional()
+    .isInt({ min: 0 })
+    .withMessage('Received quantity must be a non-negative integer')
+    .toInt(),
+  body('item_code')
+    .optional()
+    .trim()
+    .isLength({ max: 50 })
+    .withMessage('Item code cannot exceed 50 characters'),
+  body('inventory_id')
+    .optional()
+    .isInt({ min: 1 })
+    .withMessage('Inventory ID must be a positive integer'),
+  body('category')
+    .optional()
+    .trim()
+    .isLength({ max: 100 })
+    .withMessage('Category cannot exceed 100 characters'),
+  body('specifications')
+    .optional()
+    .trim()
+    .isLength({ max: 2000 })
+    .withMessage('Specifications cannot exceed 2000 characters'),
+  body('notes')
+    .optional()
+    .trim()
+    .isLength({ max: 500 })
+    .withMessage('Notes cannot exceed 500 characters'),
+  handleValidationErrors,
+];
+
+export const updateRequisitionItemValidation = [
+  body('item_name')
+    .optional()
+    .trim()
+    .notEmpty()
+    .withMessage('Item name cannot be empty')
+    .isLength({ max: 255 })
+    .withMessage('Item name cannot exceed 255 characters'),
+  body('description')
+    .optional()
+    .trim()
+    .isLength({ max: 1000 })
+    .withMessage('Description cannot exceed 1000 characters'),
+  body('quantity')
+    .optional()
+    .isInt({ min: 1 })
+    .withMessage('Quantity must be a positive integer')
+    .toInt(),
+  body('unit')
+    .optional()
+    .trim()
+    .notEmpty()
+    .withMessage('Unit cannot be empty')
+    .isLength({ max: 50 })
+    .withMessage('Unit cannot exceed 50 characters'),
+  body('estimated_unit_cost')
+    .optional()
+    .isFloat({ min: 0 })
+    .withMessage('Estimated unit cost must be a non-negative number')
+    .toFloat(),
+  body('actual_unit_cost')
+    .optional()
+    .isFloat({ min: 0 })
+    .withMessage('Actual unit cost must be a non-negative number')
+    .toFloat(),
+  body('received_quantity')
+    .optional()
+    .isInt({ min: 0 })
+    .withMessage('Received quantity must be a non-negative integer')
+    .toInt(),
+  body('item_code')
+    .optional()
+    .trim()
+    .isLength({ max: 50 })
+    .withMessage('Item code cannot exceed 50 characters'),
+  body('inventory_id')
+    .optional()
+    .isInt({ min: 1 })
+    .withMessage('Inventory ID must be a positive integer'),
+  body('category')
+    .optional()
+    .trim()
+    .isLength({ max: 100 })
+    .withMessage('Category cannot exceed 100 characters'),
+  body('specifications')
+    .optional()
+    .trim()
+    .isLength({ max: 2000 })
+    .withMessage('Specifications cannot exceed 2000 characters'),
+  body('notes')
+    .optional()
+    .trim()
+    .isLength({ max: 500 })
+    .withMessage('Notes cannot exceed 500 characters'),
+  handleValidationErrors,
+];
+
+export const approveRequisitionValidation = [
+  handleValidationErrors,
+];
+
+export const rejectRequisitionValidation = [
+  body('rejection_reason')
+    .trim()
+    .notEmpty()
+    .withMessage('Rejection reason is required')
+    .isLength({ max: 1000 })
+    .withMessage('Rejection reason cannot exceed 1000 characters'),
+  handleValidationErrors,
+];
+
+export const orderRequisitionValidation = [
+  body('vendor_id')
+    .notEmpty()
+    .isInt({ min: 1 })
+    .withMessage('Vendor ID is required and must be a positive integer'),
+  body('po_number')
+    .optional()
+    .trim()
+    .isLength({ max: 100 })
+    .withMessage('PO number cannot exceed 100 characters'),
+  handleValidationErrors,
+];
+
+// ============================================
+// INVENTORY VALIDATORS
+// ============================================
+
+export const createInventoryValidation = [
+  body('name')
+    .trim()
+    .notEmpty()
+    .withMessage('Item name is required')
+    .isLength({ max: 255 })
+    .withMessage('Item name cannot exceed 255 characters'),
+  body('description')
+    .optional()
+    .trim()
+    .isLength({ max: 2000 })
+    .withMessage('Description cannot exceed 2000 characters'),
+  body('category')
+    .optional()
+    .trim()
+    .isLength({ max: 100 })
+    .withMessage('Category cannot exceed 100 characters'),
+  body('subcategory')
+    .optional()
+    .trim()
+    .isLength({ max: 100 })
+    .withMessage('Subcategory cannot exceed 100 characters'),
+  body('unit')
+    .trim()
+    .notEmpty()
+    .withMessage('Unit is required')
+    .isLength({ max: 50 })
+    .withMessage('Unit cannot exceed 50 characters'),
+  body('current_quantity')
+    .optional()
+    .isInt({ min: 0 })
+    .withMessage('Current quantity must be a non-negative integer')
+    .toInt(),
+  body('minimum_quantity')
+    .optional()
+    .isInt({ min: 0 })
+    .withMessage('Minimum quantity must be a non-negative integer')
+    .toInt(),
+  body('maximum_quantity')
+    .optional()
+    .isInt({ min: 0 })
+    .withMessage('Maximum quantity must be a non-negative integer')
+    .toInt(),
+  body('reorder_quantity')
+    .optional()
+    .isInt({ min: 1 })
+    .withMessage('Reorder quantity must be a positive integer')
+    .toInt(),
+  body('unit_cost')
+    .optional()
+    .isFloat({ min: 0 })
+    .withMessage('Unit cost must be a non-negative number')
+    .toFloat(),
+  body('location')
+    .optional()
+    .trim()
+    .isLength({ max: 100 })
+    .withMessage('Location cannot exceed 100 characters'),
+  body('vendor_id')
+    .optional()
+    .isInt({ min: 1 })
+    .withMessage('Vendor ID must be a positive integer'),
+  body('vertical_id')
+    .notEmpty()
+    .isInt({ min: 1 })
+    .withMessage('Vertical ID is required and must be a positive integer'),
+  handleValidationErrors,
+];
+
+export const updateInventoryValidation = [
+  body('name')
+    .optional()
+    .trim()
+    .notEmpty()
+    .withMessage('Item name cannot be empty')
+    .isLength({ max: 255 })
+    .withMessage('Item name cannot exceed 255 characters'),
+  body('description')
+    .optional()
+    .trim()
+    .isLength({ max: 2000 })
+    .withMessage('Description cannot exceed 2000 characters'),
+  body('category')
+    .optional()
+    .trim()
+    .isLength({ max: 100 })
+    .withMessage('Category cannot exceed 100 characters'),
+  body('subcategory')
+    .optional()
+    .trim()
+    .isLength({ max: 100 })
+    .withMessage('Subcategory cannot exceed 100 characters'),
+  body('unit')
+    .optional()
+    .trim()
+    .notEmpty()
+    .withMessage('Unit cannot be empty')
+    .isLength({ max: 50 })
+    .withMessage('Unit cannot exceed 50 characters'),
+  body('minimum_quantity')
+    .optional()
+    .isInt({ min: 0 })
+    .withMessage('Minimum quantity must be a non-negative integer')
+    .toInt(),
+  body('maximum_quantity')
+    .optional()
+    .isInt({ min: 0 })
+    .withMessage('Maximum quantity must be a non-negative integer')
+    .toInt(),
+  body('reorder_quantity')
+    .optional()
+    .isInt({ min: 1 })
+    .withMessage('Reorder quantity must be a positive integer')
+    .toInt(),
+  body('unit_cost')
+    .optional()
+    .isFloat({ min: 0 })
+    .withMessage('Unit cost must be a non-negative number')
+    .toFloat(),
+  body('location')
+    .optional()
+    .trim()
+    .isLength({ max: 100 })
+    .withMessage('Location cannot exceed 100 characters'),
+  body('vendor_id')
+    .optional()
+    .isInt({ min: 1 })
+    .withMessage('Vendor ID must be a positive integer'),
+  handleValidationErrors,
+];
+
+export const updateInventoryQuantityValidation = [
+  body('quantity')
+    .notEmpty()
+    .isInt({ min: 0 })
+    .withMessage('Quantity is required and must be a non-negative integer')
+    .toInt(),
+  body('unit_cost')
+    .optional()
+    .isFloat({ min: 0 })
+    .withMessage('Unit cost must be a non-negative number')
+    .toFloat(),
+  handleValidationErrors,
+];
+
+export const createStockTransactionValidation = [
+  body('inventory_id')
+    .notEmpty()
+    .isInt({ min: 1 })
+    .withMessage('Inventory ID is required and must be a positive integer'),
+  body('transaction_type')
+    .notEmpty()
+    .isIn(['in', 'out', 'adjustment', 'transfer'])
+    .withMessage('Transaction type must be in, out, adjustment, or transfer'),
+  body('quantity')
+    .notEmpty()
+    .isInt()
+    .withMessage('Quantity is required and must be an integer')
+    .toInt(),
+  body('unit_cost')
+    .optional()
+    .isFloat({ min: 0 })
+    .withMessage('Unit cost must be a non-negative number')
+    .toFloat(),
+  body('reference_type')
+    .notEmpty()
+    .isIn(['requisition', 'manual', 'donation', 'adjustment', 'transfer'])
+    .withMessage('Reference type is required'),
+  body('reference_id')
+    .notEmpty()
+    .isInt({ min: 1 })
+    .withMessage('Reference ID is required and must be a positive integer'),
+  body('reason')
+    .optional()
+    .trim()
+    .isLength({ max: 500 })
+    .withMessage('Reason cannot exceed 500 characters'),
+  body('vertical_id')
+    .notEmpty()
+    .isInt({ min: 1 })
+    .withMessage('Vertical ID is required and must be a positive integer'),
+  handleValidationErrors,
+];

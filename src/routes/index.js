@@ -14,6 +14,9 @@ import feeRoutes from './feeRoutes.js';
 import paymentRoutes from './paymentRoutes.js';
 import waiverRoutes from './waiverRoutes.js';
 import subsidyRoutes from './subsidyRoutes.js';
+import vendorRoutes from './vendorRoutes.js';
+import requisitionRoutes from './requisitionRoutes.js';
+import inventoryRoutes from './inventoryRoutes.js';
 import healthRoutes from './healthRoutes.js';
 
 const router = Router();
@@ -33,6 +36,9 @@ router.use('/fees', feeRoutes);
 router.use('/payments', paymentRoutes);
 router.use('/waivers', waiverRoutes);
 router.use('/subsidies', subsidyRoutes);
+router.use('/vendors', vendorRoutes);
+router.use('/requisitions', requisitionRoutes);
+router.use('/inventory', inventoryRoutes);
 router.use('/', healthRoutes);
 
 export default router;
