@@ -397,25 +397,33 @@ export const validateAllocationInput = (data) => {
   };
 };
 
-export const programValidation = [
+const programStatusValidation = body('status')
+  .optional()
+  .isIn(['planning', 'active', 'completed', 'on_hold', 'cancelled', 'suspended'])
+  .withMessage('Invalid program status');
+
+export const createProgramValidation = [
   body('name')
     .trim()
     .notEmpty()
     .withMessage('Program name is required')
-    .isLength({ max: 200 })
-    .withMessage('Name cannot exceed 200 characters'),
+    .isLength({ max: 255 })
+    .withMessage('Name cannot exceed 255 characters'),
+  body('code')
+    .optional()
+    .trim()
+    .isLength({ max: 50 })
+    .withMessage('Code cannot exceed 50 characters'),
   body('description')
     .optional()
     .trim()
-    .isLength({ max: 2000 })
-    .withMessage('Description cannot exceed 2000 characters'),
+    .isLength({ max: 5000 })
+    .withMessage('Description cannot exceed 5000 characters'),
   body('vertical_id')
-    .isInt({ min: 1 })
-    .withMessage('Vertical ID is required'),
-  body('budget')
     .optional()
-    .isFloat({ min: 0 })
-    .withMessage('Budget must be a positive number'),
+    .isInt({ min: 1 })
+    .withMessage('Vertical ID must be a positive integer')
+    .toInt(),
   body('start_date')
     .optional()
     .isISO8601()
@@ -424,6 +432,236 @@ export const programValidation = [
     .optional()
     .isISO8601()
     .withMessage('Invalid end date format'),
+  body('budget')
+    .optional()
+    .isFloat({ min: 0 })
+    .withMessage('Budget must be a non-negative number')
+    .toFloat(),
+  body('spent_amount')
+    .optional()
+    .isFloat({ min: 0 })
+    .withMessage('Spent amount must be a non-negative number')
+    .toFloat(),
+  programStatusValidation,
+  body('manager_user_id')
+    .optional()
+    .isInt({ min: 1 })
+    .withMessage('Manager user ID must be a positive integer')
+    .toInt(),
+  body('location')
+    .optional()
+    .trim()
+    .isLength({ max: 255 })
+    .withMessage('Location cannot exceed 255 characters'),
+  body('beneficiary_target')
+    .optional()
+    .isInt({ min: 0 })
+    .withMessage('Beneficiary target must be a non-negative integer')
+    .toInt(),
+  body('beneficiary_reached')
+    .optional()
+    .isInt({ min: 0 })
+    .withMessage('Beneficiary reached must be a non-negative integer')
+    .toInt(),
+  body().custom((_, { req }) => {
+    if (req.body.start_date && req.body.end_date) {
+      const start = new Date(req.body.start_date);
+      const end = new Date(req.body.end_date);
+      if (Number.isFinite(start.getTime()) && Number.isFinite(end.getTime()) && end < start) {
+        throw new Error('end_date cannot be before start_date');
+      }
+    }
+
+    if (req.user?.roleId === 1 && !req.body.vertical_id) {
+      throw new Error('vertical_id is required');
+    }
+
+    return true;
+  }),
+  handleValidationErrors,
+];
+
+export const updateProgramValidation = [
+  body('name')
+    .optional()
+    .trim()
+    .notEmpty()
+    .withMessage('Program name cannot be empty')
+    .isLength({ max: 255 })
+    .withMessage('Name cannot exceed 255 characters'),
+  body('code')
+    .optional()
+    .trim()
+    .isLength({ max: 50 })
+    .withMessage('Code cannot exceed 50 characters'),
+  body('description')
+    .optional()
+    .trim()
+    .isLength({ max: 5000 })
+    .withMessage('Description cannot exceed 5000 characters'),
+  body('vertical_id')
+    .optional()
+    .isInt({ min: 1 })
+    .withMessage('Vertical ID must be a positive integer')
+    .toInt(),
+  body('start_date')
+    .optional()
+    .isISO8601()
+    .withMessage('Invalid start date format'),
+  body('end_date')
+    .optional()
+    .isISO8601()
+    .withMessage('Invalid end date format'),
+  body('budget')
+    .optional()
+    .isFloat({ min: 0 })
+    .withMessage('Budget must be a non-negative number')
+    .toFloat(),
+  body('spent_amount')
+    .optional()
+    .isFloat({ min: 0 })
+    .withMessage('Spent amount must be a non-negative number')
+    .toFloat(),
+  programStatusValidation,
+  body('manager_user_id')
+    .optional()
+    .isInt({ min: 1 })
+    .withMessage('Manager user ID must be a positive integer')
+    .toInt(),
+  body('location')
+    .optional()
+    .trim()
+    .isLength({ max: 255 })
+    .withMessage('Location cannot exceed 255 characters'),
+  body('beneficiary_target')
+    .optional()
+    .isInt({ min: 0 })
+    .withMessage('Beneficiary target must be a non-negative integer')
+    .toInt(),
+  body('beneficiary_reached')
+    .optional()
+    .isInt({ min: 0 })
+    .withMessage('Beneficiary reached must be a non-negative integer')
+    .toInt(),
+  body().custom((_, { req }) => {
+    if (req.body.start_date && req.body.end_date) {
+      const start = new Date(req.body.start_date);
+      const end = new Date(req.body.end_date);
+      if (Number.isFinite(start.getTime()) && Number.isFinite(end.getTime()) && end < start) {
+        throw new Error('end_date cannot be before start_date');
+      }
+    }
+    return true;
+  }),
+  handleValidationErrors,
+];
+
+export const updateProgramStatusValidation = [
+  body('status')
+    .notEmpty()
+    .withMessage('Status is required')
+    .isIn(['planning', 'active', 'completed', 'on_hold', 'cancelled', 'suspended'])
+    .withMessage('Invalid program status'),
+  handleValidationErrors,
+];
+
+// Backwards compatibility for any existing references
+export const programValidation = createProgramValidation;
+
+export const createKpiValidation = [
+  body('program_id')
+    .notEmpty()
+    .withMessage('program_id is required')
+    .isInt({ min: 1 })
+    .withMessage('program_id must be a positive integer')
+    .toInt(),
+  body('kpi_name')
+    .trim()
+    .notEmpty()
+    .withMessage('kpi_name is required')
+    .isLength({ max: 255 })
+    .withMessage('kpi_name cannot exceed 255 characters'),
+  body('description')
+    .optional()
+    .trim()
+    .isLength({ max: 5000 })
+    .withMessage('Description cannot exceed 5000 characters'),
+  body('target_value')
+    .optional({ nullable: true })
+    .isFloat({ min: 0 })
+    .withMessage('target_value must be a non-negative number')
+    .toFloat(),
+  body('current_value')
+    .optional()
+    .isFloat({ min: 0 })
+    .withMessage('current_value must be a non-negative number')
+    .toFloat(),
+  body('unit')
+    .optional()
+    .trim()
+    .isLength({ max: 50 })
+    .withMessage('unit cannot exceed 50 characters'),
+  body('measurement_frequency')
+    .optional()
+    .isIn(['daily', 'weekly', 'monthly', 'quarterly', 'yearly', 'one_time'])
+    .withMessage('Invalid measurement_frequency'),
+  body('status')
+    .optional()
+    .isIn(['on_track', 'at_risk', 'behind', 'achieved'])
+    .withMessage('Invalid KPI status'),
+  handleValidationErrors,
+];
+
+export const updateKpiValidation = [
+  body('kpi_name')
+    .optional()
+    .trim()
+    .notEmpty()
+    .withMessage('kpi_name cannot be empty')
+    .isLength({ max: 255 })
+    .withMessage('kpi_name cannot exceed 255 characters'),
+  body('description')
+    .optional()
+    .trim()
+    .isLength({ max: 5000 })
+    .withMessage('Description cannot exceed 5000 characters'),
+  body('target_value')
+    .optional({ nullable: true })
+    .isFloat({ min: 0 })
+    .withMessage('target_value must be a non-negative number')
+    .toFloat(),
+  body('current_value')
+    .optional()
+    .isFloat({ min: 0 })
+    .withMessage('current_value must be a non-negative number')
+    .toFloat(),
+  body('unit')
+    .optional()
+    .trim()
+    .isLength({ max: 50 })
+    .withMessage('unit cannot exceed 50 characters'),
+  body('measurement_frequency')
+    .optional()
+    .isIn(['daily', 'weekly', 'monthly', 'quarterly', 'yearly', 'one_time'])
+    .withMessage('Invalid measurement_frequency'),
+  body('status')
+    .optional()
+    .isIn(['on_track', 'at_risk', 'behind', 'achieved'])
+    .withMessage('Invalid KPI status'),
+  handleValidationErrors,
+];
+
+export const updateKpiProgressValidation = [
+  body('current_value')
+    .notEmpty()
+    .withMessage('current_value is required')
+    .isFloat({ min: 0 })
+    .withMessage('current_value must be a non-negative number')
+    .toFloat(),
+  body('status')
+    .optional()
+    .isIn(['on_track', 'at_risk', 'behind', 'achieved'])
+    .withMessage('Invalid KPI status'),
   handleValidationErrors,
 ];
 
@@ -918,7 +1156,16 @@ export default {
   reallocateValidation,
   confirmDonationValidation,
   searchValidation,
+
   programValidation,
+  createProgramValidation,
+  updateProgramValidation,
+  updateProgramStatusValidation,
+
+  createKpiValidation,
+  updateKpiValidation,
+  updateKpiProgressValidation,
+
   volunteerValidation,
   createVolunteerValidation,
   updateVolunteerValidation,
@@ -926,6 +1173,7 @@ export default {
   volunteerInsuranceUpdateValidation,
   volunteerAssignmentValidation,
   assignmentUpdateValidation,
+
   staffValidation,
   contactValidation,
   validateEmail,
