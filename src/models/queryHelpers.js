@@ -267,7 +267,7 @@ export const userModel = {
       }
       
       await connection.execute(
-        `INSERT INTO audit_logs (user_id, action, entity, entity_id, old_values, new_values, created_at)
+        `INSERT INTO audit_logs (user_id, action, entity_type, entity_id, old_values, new_values, created_at)
          VALUES (?, 'create', 'users', ?, NULL, ?, NOW())`,
         [userData.created_by || userId, userId, JSON.stringify({ email: userData.email, first_name: userData.first_name, last_name: userData.last_name, role_id: userData.role_id, vertical_id: userData.vertical_id })]
       );
@@ -306,7 +306,7 @@ export const userModel = {
       const newUser = await this.findById(id);
       
       await connection.execute(
-        `INSERT INTO audit_logs (user_id, action, entity, entity_id, old_values, new_values, created_at)
+        `INSERT INTO audit_logs (user_id, action, entity_type, entity_id, old_values, new_values, created_at)
          VALUES (?, 'update', 'users', ?, ?, NOW())`,
         [updatedBy || id, id, JSON.stringify({ old: { first_name: oldUser.first_name, last_name: oldUser.last_name, email: oldUser.email, role_id: oldUser.role_id, vertical_id: oldUser.vertical_id }, new: updateData })]
       );
@@ -328,7 +328,7 @@ export const userModel = {
       );
       
       await connection.execute(
-        `INSERT INTO audit_logs (user_id, action, entity, entity_id, old_values, new_values, created_at)
+        `INSERT INTO audit_logs (user_id, action, entity_type, entity_id, old_values, new_values, created_at)
          VALUES (?, 'update_role', 'users', ?, ?, NOW())`,
         [updatedBy, id, JSON.stringify({ old: { role_id: oldUser.role_id }, new: { role_id: roleId } })]
       );
@@ -350,7 +350,7 @@ export const userModel = {
       );
       
       await connection.execute(
-        `INSERT INTO audit_logs (user_id, action, entity, entity_id, old_values, new_values, created_at)
+        `INSERT INTO audit_logs (user_id, action, entity_type, entity_id, old_values, new_values, created_at)
          VALUES (?, 'update_status', 'users', ?, ?, NOW())`,
         [updatedBy, id, JSON.stringify({ old: { status: oldUser.status }, new: { status } })]
       );
@@ -367,7 +367,7 @@ export const userModel = {
       );
       
       await connection.execute(
-        `INSERT INTO audit_logs (user_id, action, entity, entity_id, old_values, new_values, created_at)
+        `INSERT INTO audit_logs (user_id, action, entity_type, entity_id, old_values, new_values, created_at)
          VALUES (?, 'change_password', 'users', ?, NULL, ?, NOW())`,
         [updatedBy || id, id, JSON.stringify({ password_changed: true })]
       );
@@ -454,7 +454,7 @@ export const roleModel = {
       const roleId = result.insertId;
       
       await connection.execute(
-        `INSERT INTO audit_logs (user_id, action, entity, entity_id, old_values, new_values, created_at)
+        `INSERT INTO audit_logs (user_id, action, entity_type, entity_id, old_values, new_values, created_at)
          VALUES (?, 'create', 'roles', ?, NULL, ?, NOW())`,
         [createdBy, roleId, JSON.stringify(roleData)]
       );
@@ -498,7 +498,7 @@ export const roleModel = {
       await connection.execute(updateQuery, values);
       
       await connection.execute(
-        `INSERT INTO audit_logs (user_id, action, entity, entity_id, old_values, new_values, created_at)
+        `INSERT INTO audit_logs (user_id, action, entity_type, entity_id, old_values, new_values, created_at)
          VALUES (?, 'update', 'roles', ?, ?, NOW())`,
         [updatedBy, id, JSON.stringify({ old: oldRole, new: roleData })]
       );

@@ -397,6 +397,110 @@ export const validateAllocationInput = (data) => {
   };
 };
 
+export const safeguardingValidation = [
+  body('title')
+    .trim()
+    .notEmpty()
+    .withMessage('Title is required')
+    .isLength({ max: 255 })
+    .withMessage('Title cannot exceed 255 characters'),
+  body('incident_date')
+    .notEmpty()
+    .withMessage('Incident date is required')
+    .isISO8601()
+    .withMessage('Invalid incident date format'),
+  body('incident_type')
+    .notEmpty()
+    .withMessage('Incident type is required')
+    .isIn(['abuse', 'exploitation', 'harassment', 'discrimination', 'misconduct', 'other'])
+    .withMessage('Invalid incident type'),
+  body('severity')
+    .notEmpty()
+    .withMessage('Severity is required')
+    .isIn(['low', 'medium', 'high', 'critical'])
+    .withMessage('Invalid severity'),
+  body('description')
+    .trim()
+    .notEmpty()
+    .withMessage('Description is required')
+    .isLength({ min: 10 })
+    .withMessage('Description must be at least 10 characters long'),
+  body('location')
+    .optional()
+    .trim()
+    .isLength({ max: 255 })
+    .withMessage('Location cannot exceed 255 characters'),
+  body('people_involved')
+    .optional()
+    .isArray()
+    .withMessage('People involved must be an array'),
+  body('confidential')
+    .optional()
+    .isBoolean()
+    .withMessage('Confidential must be a boolean'),
+  body('vertical_id')
+    .optional()
+    .isInt({ min: 1 })
+    .withMessage('Vertical ID must be a positive integer'),
+  body('program_id')
+    .optional()
+    .isInt({ min: 1 })
+    .withMessage('Program ID must be a positive integer'),
+  handleValidationErrors,
+];
+
+export const updateSafeguardingValidation = [
+  body('title')
+    .optional()
+    .trim()
+    .notEmpty()
+    .withMessage('Title cannot be empty')
+    .isLength({ max: 255 })
+    .withMessage('Title cannot exceed 255 characters'),
+  body('incident_date')
+    .optional()
+    .isISO8601()
+    .withMessage('Invalid incident date format'),
+  body('incident_type')
+    .optional()
+    .isIn(['abuse', 'exploitation', 'harassment', 'discrimination', 'misconduct', 'other'])
+    .withMessage('Invalid incident type'),
+  body('severity')
+    .optional()
+    .isIn(['low', 'medium', 'high', 'critical'])
+    .withMessage('Invalid severity'),
+  body('status')
+    .optional()
+    .isIn(['reported', 'under_investigation', 'resolved', 'closed', 'escalated'])
+    .withMessage('Invalid status'),
+  body('description')
+    .optional()
+    .trim()
+    .notEmpty()
+    .withMessage('Description cannot be empty'),
+  body('confidential')
+    .optional()
+    .isBoolean()
+    .withMessage('Confidential must be a boolean'),
+  handleValidationErrors,
+];
+
+export const auditLogQueryValidation = [
+  query('user_id')
+    .optional()
+    .isInt({ min: 1 })
+    .withMessage('User ID must be a positive integer'),
+  query('startDate')
+    .optional()
+    .isISO8601()
+    .withMessage('Invalid start date format'),
+  query('endDate')
+    .optional()
+    .isISO8601()
+    .withMessage('Invalid end date format'),
+  handleValidationErrors,
+];
+
 const programStatusValidation = body('status')
   .optional()
   .isIn(['planning', 'active', 'completed', 'on_hold', 'cancelled', 'suspended'])

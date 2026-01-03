@@ -1,4 +1,6 @@
 import { Router } from 'express';
+import { optionalAuth } from '../middleware/authMiddleware.js';
+import auditMiddleware from '../middleware/auditMiddleware.js';
 import authRoutes from './authRoutes.js';
 import userRoutes from './userRoutes.js';
 import contactRoutes from './contactRoutes.js';
@@ -17,9 +19,15 @@ import subsidyRoutes from './subsidyRoutes.js';
 import vendorRoutes from './vendorRoutes.js';
 import requisitionRoutes from './requisitionRoutes.js';
 import inventoryRoutes from './inventoryRoutes.js';
+import safeguardingRoutes from './safeguardingRoutes.js';
+import auditLogRoutes from './auditLogRoutes.js';
 import healthRoutes from './healthRoutes.js';
 
 const router = Router();
+
+// Global API middleware
+router.use(optionalAuth); // Extracts user if token is present
+router.use(auditMiddleware); // Logs modify actions and sensitive views
 
 router.use('/auth', authRoutes);
 router.use('/users', userRoutes);
@@ -39,6 +47,8 @@ router.use('/subsidies', subsidyRoutes);
 router.use('/vendors', vendorRoutes);
 router.use('/requisitions', requisitionRoutes);
 router.use('/inventory', inventoryRoutes);
+router.use('/safeguarding', safeguardingRoutes);
+router.use('/audit-logs', auditLogRoutes);
 router.use('/', healthRoutes);
 
 export default router;
