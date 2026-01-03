@@ -1441,3 +1441,333 @@ export default {
   validateDonationInput,
   validateAllocationInput,
 };
+
+// Fee Plan Validations
+export const createFeePlanValidation = [
+  body('name')
+    .trim()
+    .notEmpty()
+    .withMessage('Fee plan name is required')
+    .isLength({ max: 255 })
+    .withMessage('Name cannot exceed 255 characters'),
+  body('description')
+    .optional()
+    .trim()
+    .isLength({ max: 1000 })
+    .withMessage('Description cannot exceed 1000 characters'),
+  body('fee_type')
+    .isIn(['membership', 'service', 'processing', 'administrative'])
+    .withMessage('Invalid fee type'),
+  body('amount')
+    .isFloat({ min: 0.01 })
+    .withMessage('Amount must be a positive number')
+    .toFloat(),
+  body('billing_frequency')
+    .optional()
+    .isIn(['monthly', 'quarterly', 'yearly', 'one_time'])
+    .withMessage('Invalid billing frequency'),
+  body('vertical_id')
+    .optional()
+    .isInt({ min: 1 })
+    .withMessage('Vertical ID must be a positive integer')
+    .toInt(),
+  body('is_template')
+    .optional()
+    .isBoolean()
+    .withMessage('Is template must be a boolean'),
+  body('template_category')
+    .optional()
+    .trim()
+    .isLength({ max: 100 })
+    .withMessage('Template category cannot exceed 100 characters'),
+  body('billing_day')
+    .optional()
+    .isInt({ min: 1, max: 31 })
+    .withMessage('Billing day must be between 1 and 31')
+    .toInt(),
+  body('due_day')
+    .optional()
+    .isInt({ min: 1, max: 31 })
+    .withMessage('Due day must be between 1 and 31')
+    .toInt(),
+  body('grace_period_days')
+    .optional()
+    .isInt({ min: 0 })
+    .withMessage('Grace period days must be non-negative')
+    .toInt(),
+  body('late_fee_amount')
+    .optional()
+    .isFloat({ min: 0 })
+    .withMessage('Late fee amount must be non-negative')
+    .toFloat(),
+  handleValidationErrors,
+];
+
+export const updateFeePlanValidation = [
+  body('name')
+    .optional()
+    .trim()
+    .notEmpty()
+    .withMessage('Name cannot be empty')
+    .isLength({ max: 255 })
+    .withMessage('Name cannot exceed 255 characters'),
+  body('description')
+    .optional()
+    .trim()
+    .isLength({ max: 1000 })
+    .withMessage('Description cannot exceed 1000 characters'),
+  body('fee_type')
+    .optional()
+    .isIn(['membership', 'service', 'processing', 'administrative'])
+    .withMessage('Invalid fee type'),
+  body('amount')
+    .optional()
+    .isFloat({ min: 0.01 })
+    .withMessage('Amount must be a positive number')
+    .toFloat(),
+  body('billing_frequency')
+    .optional()
+    .isIn(['monthly', 'quarterly', 'yearly', 'one_time'])
+    .withMessage('Invalid billing frequency'),
+  body('vertical_id')
+    .optional()
+    .isInt({ min: 1 })
+    .withMessage('Vertical ID must be a positive integer')
+    .toInt(),
+  handleValidationErrors,
+];
+
+// Fee Validations
+export const createFeeValidation = [
+  body('contact_id')
+    .notEmpty()
+    .isInt({ min: 1 })
+    .withMessage('Contact ID is required and must be a positive integer'),
+  body('fee_plan_id')
+    .optional()
+    .isInt({ min: 1 })
+    .withMessage('Fee plan ID must be a positive integer'),
+  body('vertical_id')
+    .notEmpty()
+    .isInt({ min: 1 })
+    .withMessage('Vertical ID is required and must be a positive integer'),
+  body('amount')
+    .isFloat({ min: 0.01 })
+    .withMessage('Amount must be a positive number')
+    .toFloat(),
+  body('currency')
+    .optional()
+    .isIn(['INR', 'USD', 'EUR', 'GBP'])
+    .withMessage('Invalid currency'),
+  body('description')
+    .trim()
+    .notEmpty()
+    .withMessage('Description is required')
+    .isLength({ max: 500 })
+    .withMessage('Description cannot exceed 500 characters'),
+  body('due_date')
+    .notEmpty()
+    .isISO8601()
+    .withMessage('Valid due date is required'),
+  body('billing_period_start')
+    .optional()
+    .isISO8601()
+    .withMessage('Invalid billing period start date format'),
+  body('billing_period_end')
+    .optional()
+    .isISO8601()
+    .withMessage('Invalid billing period end date format'),
+  handleValidationErrors,
+];
+
+export const updateFeeStatusValidation = [
+  body('status')
+    .isIn(['pending', 'paid', 'overdue', 'waived'])
+    .withMessage('Invalid fee status'),
+  body('notes')
+    .optional()
+    .trim()
+    .isLength({ max: 500 })
+    .withMessage('Notes cannot exceed 500 characters'),
+  handleValidationErrors,
+];
+
+export const updateFeeAmountValidation = [
+  body('amount')
+    .isFloat({ min: 0.01 })
+    .withMessage('Amount must be a positive number')
+    .toFloat(),
+  body('reason')
+    .optional()
+    .trim()
+    .isLength({ max: 500 })
+    .withMessage('Reason cannot exceed 500 characters'),
+  handleValidationErrors,
+];
+
+// Payment Validations
+export const recordPaymentValidation = [
+  body('fee_id')
+    .notEmpty()
+    .isInt({ min: 1 })
+    .withMessage('Fee ID is required and must be a positive integer'),
+  body('amount')
+    .isFloat({ min: 0.01 })
+    .withMessage('Payment amount must be a positive number')
+    .toFloat(),
+  body('payment_date')
+    .optional()
+    .isISO8601()
+    .withMessage('Invalid payment date format'),
+  body('payment_method')
+    .isIn(['cash', 'cheque', 'bank_transfer', 'online', 'upi', 'card'])
+    .withMessage('Invalid payment method'),
+  body('reference')
+    .optional()
+    .trim()
+    .isLength({ max: 100 })
+    .withMessage('Reference cannot exceed 100 characters'),
+  body('notes')
+    .optional()
+    .trim()
+    .isLength({ max: 500 })
+    .withMessage('Notes cannot exceed 500 characters'),
+  handleValidationErrors,
+];
+
+// Waiver Validations
+export const createWaiverValidation = [
+  body('fee_id')
+    .notEmpty()
+    .isInt({ min: 1 })
+    .withMessage('Fee ID is required and must be a positive integer'),
+  body('waiver_type')
+    .isIn(['hardship', 'medical', 'administrative', 'other'])
+    .withMessage('Invalid waiver type'),
+  body('reason')
+    .trim()
+    .notEmpty()
+    .withMessage('Reason is required')
+    .isLength({ max: 1000 })
+    .withMessage('Reason cannot exceed 1000 characters'),
+  body('requested_amount')
+    .optional()
+    .isFloat({ min: 0 })
+    .withMessage('Requested amount must be non-negative')
+    .toFloat(),
+  body('notes')
+    .optional()
+    .trim()
+    .isLength({ max: 500 })
+    .withMessage('Notes cannot exceed 500 characters'),
+  handleValidationErrors,
+];
+
+export const reviewWaiverValidation = [
+  body('notes')
+    .optional()
+    .trim()
+    .isLength({ max: 500 })
+    .withMessage('Review notes cannot exceed 500 characters'),
+  handleValidationErrors,
+];
+
+// Subsidy Validations
+export const createSubsidyValidation = [
+  body('contact_id')
+    .notEmpty()
+    .isInt({ min: 1 })
+    .withMessage('Contact ID is required and must be a positive integer'),
+  body('vertical_id')
+    .notEmpty()
+    .isInt({ min: 1 })
+    .withMessage('Vertical ID is required and must be a positive integer'),
+  body('amount')
+    .isFloat({ min: 0.01 })
+    .withMessage('Amount must be a positive number')
+    .toFloat(),
+  body('currency')
+    .optional()
+    .isIn(['INR', 'USD', 'EUR', 'GBP'])
+    .withMessage('Invalid currency'),
+  body('subsidy_type')
+    .isIn(['needs_based', 'merit_based', 'emergency', 'program_specific'])
+    .withMessage('Invalid subsidy type'),
+  body('description')
+    .optional()
+    .trim()
+    .isLength({ max: 500 })
+    .withMessage('Description cannot exceed 500 characters'),
+  body('eligibility_criteria')
+    .optional()
+    .trim()
+    .isLength({ max: 500 })
+    .withMessage('Eligibility criteria cannot exceed 500 characters'),
+  body('start_date')
+    .optional()
+    .isISO8601()
+    .withMessage('Invalid start date format'),
+  body('end_date')
+    .optional()
+    .custom((value, { req }) => {
+      if (value && req.body.start_date) {
+        const start = new Date(req.body.start_date);
+        const end = new Date(value);
+        if (Number.isFinite(start.getTime()) && Number.isFinite(end.getTime()) && end < start) {
+          throw new Error('End date cannot be before start date');
+        }
+      }
+      return true;
+    }),
+  handleValidationErrors,
+];
+
+export const updateSubsidyValidation = [
+  body('amount')
+    .optional()
+    .isFloat({ min: 0.01 })
+    .withMessage('Amount must be a positive number')
+    .toFloat(),
+  body('subsidy_type')
+    .optional()
+    .isIn(['needs_based', 'merit_based', 'emergency', 'program_specific'])
+    .withMessage('Invalid subsidy type'),
+  body('description')
+    .optional()
+    .trim()
+    .isLength({ max: 500 })
+    .withMessage('Description cannot exceed 500 characters'),
+  body('start_date')
+    .optional()
+    .isISO8601()
+    .withMessage('Invalid start date format'),
+  body('end_date')
+    .optional()
+    .custom((value, { req }) => {
+      if (value && req.body.start_date) {
+        const start = new Date(req.body.start_date);
+        const end = new Date(value);
+        if (Number.isFinite(start.getTime()) && Number.isFinite(end.getTime()) && end < start) {
+          throw new Error('End date cannot be before start date');
+        }
+      }
+      return true;
+    }),
+  body('status')
+    .optional()
+    .isIn(['active', 'expired', 'suspended'])
+    .withMessage('Invalid subsidy status'),
+  handleValidationErrors,
+];
+
+export const allocateSubsidyValidation = [
+  body('feeId')
+    .notEmpty()
+    .isInt({ min: 1 })
+    .withMessage('Fee ID is required and must be a positive integer'),
+  body('amount')
+    .isFloat({ min: 0.01 })
+    .withMessage('Allocation amount must be a positive number')
+    .toFloat(),
+  handleValidationErrors,
+];
