@@ -53,7 +53,7 @@ export const userController = {
         return errorResponse(res, 409, 'Email already exists');
       }
       
-      const hashedPassword = await bcrypt.hash(password, 12);
+      const hashedPassword = await bcrypt.hash(password, 10);
       
       const userData = {
         email,

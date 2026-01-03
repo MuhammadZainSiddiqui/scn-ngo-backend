@@ -234,6 +234,53 @@ export const contactValidation = [
   handleValidationErrors,
 ];
 
+export const validateEmail = (email) => {
+  if (typeof email !== 'string') return false;
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return emailRegex.test(email);
+};
+
+export const validatePassword = (password) => {
+  if (typeof password !== 'string') return false;
+  if (password.length < 8) return false;
+  return /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/.test(password);
+};
+
+export const validateUser = (user) => {
+  const errors = [];
+
+  if (!validateEmail(user?.email)) {
+    errors.push({ field: 'email', message: 'Please provide a valid email' });
+  }
+
+  if (!validatePassword(user?.password)) {
+    errors.push({
+      field: 'password',
+      message: 'Password must be at least 8 characters and contain uppercase, lowercase, and number',
+    });
+  }
+
+  if (!user?.first_name) {
+    errors.push({ field: 'first_name', message: 'First name is required' });
+  }
+
+  if (!user?.last_name) {
+    errors.push({ field: 'last_name', message: 'Last name is required' });
+  }
+
+  return {
+    isValid: errors.length === 0,
+    errors,
+  };
+};
+
+export const sanitizeUserData = (user) => {
+  if (!user) return null;
+
+  const { password, password_hash, passwordHash, ...safeUser } = user;
+  return safeUser;
+};
+
 export default {
   handleValidationErrors,
   registerValidation,
@@ -245,4 +292,8 @@ export default {
   volunteerValidation,
   staffValidation,
   contactValidation,
+  validateEmail,
+  validatePassword,
+  validateUser,
+  sanitizeUserData,
 };

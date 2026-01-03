@@ -17,7 +17,7 @@ export const userModel = {
   },
   
   async findByEmail(email) {
-    const query = 'SELECT * FROM users WHERE email = ? AND status = "active"';
+    const query = 'SELECT * FROM users WHERE email = ?';
     const results = await executeQuery(query, [email]);
     return results[0] || null;
   },

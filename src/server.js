@@ -26,12 +26,15 @@ const startServer = async () => {
       console.log(`✅ Server is running on port ${config.port}`);
       console.log(`🌐 API available at http://localhost:${config.port}/api`);
       console.log('📋 Available endpoints:');
-      console.log('   - POST /api/auth/login');
       console.log('   - POST /api/auth/register');
+      console.log('   - POST /api/auth/login');
+      console.log('   - POST /api/auth/refresh-token');
+      console.log('   - POST /api/auth/logout');
+      console.log('   - GET  /api/auth/verify');
       console.log('   - GET  /api/auth/profile');
       console.log('   - GET  /api/users');
       console.log('   - GET  /api/health');
-    });
+
     
     const gracefulShutdown = async (signal) => {
       console.log(`\n${signal} received. Shutting down gracefully...`);
