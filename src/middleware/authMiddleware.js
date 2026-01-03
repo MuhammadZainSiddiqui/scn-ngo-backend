@@ -116,6 +116,58 @@ export const optionalAuth = async (req, res, next) => {
   next();
 };
 
+// Finance role middleware - allows Super Admin (1) and Vertical Lead (2)
+export const requireFinanceRole = (req, res, next) => {
+  if (!req.user) {
+    return res.status(401).json({
+      success: false,
+      message: 'Authentication required',
+    });
+  }
+
+  // Allow Super Admin (1) and Vertical Lead (2)
+  if (![1, 2].includes(req.user.roleId)) {
+    return res.status(403).json({
+      success: false,
+      message: 'Finance access required',
+      code: 'FINANCE_ROLE_REQUIRED'
+    });
+  }
+
+  next();
+};
+
+// Vertical access middleware - enforces vertical isolation
+export const requireVerticalAccess = (req, res, next) => {
+  if (!req.user) {
+    return res.status(401).json({
+      success: false,
+      message: 'Authentication required',
+    });
+  }
+
+  // Super Admin has access to all verticals
+  if (req.user.roleId === 1) {
+    return next();
+  }
+
+  // For other roles, check vertical access
+  const requestedVerticalId = req.params.verticalId || req.body.vertical_id;
+  const requestedVerticalIdNum = requestedVerticalId ? parseInt(requestedVerticalId, 10) : null;
+  const userVerticalIdNum = req.user.verticalId ? parseInt(req.user.verticalId, 10) : null;
+
+  // If trying to access another vertical, deny access
+  if (requestedVerticalIdNum && userVerticalIdNum && requestedVerticalIdNum !== userVerticalIdNum) {
+    return res.status(403).json({
+      success: false,
+      message: 'Access denied to this vertical',
+      code: 'VERTICAL_ACCESS_DENIED'
+    });
+  }
+
+  next();
+};
+
 export const generateToken = (payload) => {
   return generateAccessToken(payload);
 };
@@ -130,4 +182,6 @@ export default {
   optionalAuth,
   generateToken,
   generateRefreshToken,
+  requireFinanceRole,
+  requireVerticalAccess,
 };

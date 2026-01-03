@@ -2,15 +2,15 @@ import { executeQuery } from '../config/database.js';
 
 export const Contact = {
   async findAll(options = {}) {
-    const { page = 1, limit = 10, contact_type_id, vertical_id, status } = options;
+    const { page = 1, limit = 10, type, vertical_id, status } = options;
     const offset = (page - 1) * limit;
 
     let whereConditions = [];
     let params = [];
 
-    if (contact_type_id) {
-      whereConditions.push('c.contact_type_id = ?');
-      params.push(contact_type_id);
+    if (type) {
+      whereConditions.push('c.type = ?');
+      params.push(type);
     }
 
     if (vertical_id) {
@@ -30,10 +30,8 @@ export const Contact = {
     const query = `
       SELECT 
         c.*,
-        ct.name as contact_type_name,
         v.name as vertical_name
       FROM contacts c
-      LEFT JOIN contact_types ct ON c.contact_type_id = ct.id
       LEFT JOIN verticals v ON c.vertical_id = v.id
       ${whereClause}
       ORDER BY c.created_at DESC
@@ -66,10 +64,8 @@ export const Contact = {
     const query = `
       SELECT 
         c.*,
-        ct.name as contact_type_name,
         v.name as vertical_name
       FROM contacts c
-      LEFT JOIN contact_types ct ON c.contact_type_id = ct.id
       LEFT JOIN verticals v ON c.vertical_id = v.id
       WHERE c.id = ?
     `;
@@ -80,24 +76,37 @@ export const Contact = {
   async create(contactData) {
     const query = `
       INSERT INTO contacts (
-        first_name, last_name, email, phone, contact_type_id, 
-        vertical_id, address_line1, city, state, country, 
-        notes, status, created_by, created_at, updated_at
+        type, category, title, first_name, last_name, organization_name, email, phone,
+        address_line1, address_line2, city, state, postal_code, country, pan_number,
+        aadhar_number, gstin, tax_exempt, tags, notes, preferred_contact_method,
+        vertical_id, assigned_to_user_id, status, created_by, created_at, updated_at
       )
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'active', ?, NOW(), NOW())
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'active', ?, NOW(), NOW())
     `;
     const params = [
-      contactData.firstName,
-      contactData.lastName,
+      contactData.type || 'other',
+      contactData.category || 'individual',
+      contactData.title || null,
+      contactData.first_name || null,
+      contactData.last_name || null,
+      contactData.organization_name || null,
       contactData.email || null,
       contactData.phone || null,
-      contactData.contact_type_id,
-      contactData.vertical_id || null,
-      contactData.address || null,
+      contactData.address_line1 || null,
+      contactData.address_line2 || null,
       contactData.city || null,
       contactData.state || null,
+      contactData.postal_code || null,
       contactData.country || 'India',
+      contactData.pan_number || null,
+      contactData.aadhar_number || null,
+      contactData.gstin || null,
+      contactData.tax_exempt || false,
+      contactData.tags ? JSON.stringify(contactData.tags) : null,
       contactData.notes || null,
+      contactData.preferred_contact_method || 'email',
+      contactData.vertical_id || null,
+      contactData.assigned_to_user_id || null,
       contactData.created_by
     ];
 
@@ -106,28 +115,26 @@ export const Contact = {
   },
 
   async update(id, updateData) {
-    const fieldMap = {
-      firstName: 'first_name',
-      lastName: 'last_name',
-      email: 'email',
-      phone: 'phone',
-      contact_type_id: 'contact_type_id',
-      vertical_id: 'vertical_id',
-      address: 'address_line1',
-      city: 'city',
-      state: 'state',
-      country: 'country',
-      notes: 'notes',
-      status: 'status'
-    };
+    const allowedFields = [
+      'type', 'category', 'title', 'first_name', 'last_name', 'organization_name',
+      'email', 'phone', 'alternate_phone', 'address_line1', 'address_line2',
+      'city', 'state', 'postal_code', 'country', 'pan_number', 'aadhar_number',
+      'gstin', 'tax_exempt', 'tags', 'notes', 'preferred_contact_method',
+      'vertical_id', 'assigned_to_user_id', 'status'
+    ];
 
     const updates = [];
     const values = [];
 
     Object.entries(updateData).forEach(([key, value]) => {
-      if (fieldMap[key] && value !== undefined) {
-        updates.push(`${fieldMap[key]} = ?`);
-        values.push(value);
+      if (allowedFields.includes(key) && value !== undefined) {
+        if (key === 'tags' && Array.isArray(value)) {
+          updates.push(`${key} = ?`);
+          values.push(JSON.stringify(value));
+        } else {
+          updates.push(`${key} = ?`);
+          values.push(value);
+        }
       }
     });
 
@@ -150,40 +157,41 @@ export const Contact = {
     const query = `
       SELECT 
         c.*,
-        ct.name as contact_type_name
+        v.name as vertical_name
       FROM contacts c
-      LEFT JOIN contact_types ct ON c.contact_type_id = ct.id
+      LEFT JOIN verticals v ON c.vertical_id = v.id
       WHERE 
         c.first_name LIKE ? OR 
         c.last_name LIKE ? OR 
-        c.email LIKE ? OR 
+        c.organization_name LIKE ? OR 
+        c.email LIKE ? OR
         c.phone LIKE ?
       ORDER BY c.first_name ASC
     `;
     const param = `%${searchTerm}%`;
-    return executeQuery(query, [param, param, param, param]);
+    return executeQuery(query, [param, param, param, param, param]);
   },
 
-  async getByType(typeId) {
+  async getByType(type) {
     const query = `
       SELECT 
         c.*,
-        ct.name as contact_type_name
+        v.name as vertical_name
       FROM contacts c
-      LEFT JOIN contact_types ct ON c.contact_type_id = ct.id
-      WHERE c.contact_type_id = ?
+      LEFT JOIN verticals v ON c.vertical_id = v.id
+      WHERE c.type = ?
       ORDER BY c.first_name ASC
     `;
-    return executeQuery(query, [typeId]);
+    return executeQuery(query, [type]);
   },
 
   async getByVertical(verticalId) {
     const query = `
       SELECT 
         c.*,
-        ct.name as contact_type_name
+        v.name as vertical_name
       FROM contacts c
-      LEFT JOIN contact_types ct ON c.contact_type_id = ct.id
+      LEFT JOIN verticals v ON c.vertical_id = v.id
       WHERE c.vertical_id = ?
       ORDER BY c.first_name ASC
     `;
