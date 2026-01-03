@@ -9,6 +9,11 @@ import assignmentRoutes from './assignmentRoutes.js';
 import programRoutes from './programRoutes.js';
 import kpiRoutes from './kpiRoutes.js';
 import staffRoutes from './staffRoutes.js';
+import feePlanRoutes from './feePlanRoutes.js';
+import feeRoutes from './feeRoutes.js';
+import paymentRoutes from './paymentRoutes.js';
+import waiverRoutes from './waiverRoutes.js';
+import subsidyRoutes from './subsidyRoutes.js';
 import healthRoutes from './healthRoutes.js';
 
 const router = Router();
@@ -23,6 +28,11 @@ router.use('/assignments', assignmentRoutes);
 router.use('/programs', programRoutes);
 router.use('/kpis', kpiRoutes);
 router.use('/staff', staffRoutes);
+router.use('/fee-plans', feePlanRoutes);
+router.use('/fees', feeRoutes);
+router.use('/payments', paymentRoutes);
+router.use('/waivers', waiverRoutes);
+router.use('/subsidies', subsidyRoutes);
 router.use('/', healthRoutes);
 
 export default router;
