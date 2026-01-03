@@ -536,6 +536,7 @@ CREATE TABLE expenses (
 CREATE TABLE safeguarding_records (
     id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     incident_number VARCHAR(50) NOT NULL UNIQUE,
+    title VARCHAR(255) NOT NULL,
     incident_date DATE NOT NULL,
     reported_date DATE NOT NULL,
     incident_type ENUM('abuse', 'exploitation', 'harassment', 'discrimination', 'misconduct', 'other') NOT NULL,

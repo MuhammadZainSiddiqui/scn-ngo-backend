@@ -180,8 +180,8 @@ INSERT INTO beneficiaries (contact_id, beneficiary_id, vertical_id, program_id, 
 -- ============================================
 -- 17. SAFEGUARDING RECORDS DATA (Sample)
 -- ============================================
-INSERT INTO safeguarding_records (incident_number, incident_date, reported_date, incident_type, severity, location, description, immediate_action_taken, status, reported_by, vertical_id, confidential, external_authority_notified) VALUES
-('SG2024001', '2024-02-15', '2024-02-15', 'misconduct', 'medium', 'Program Site - Village XYZ', 'Inappropriate behavior observed during program activity', 'Person removed from activity immediately, investigation initiated', 'under_investigation', 1, 1, TRUE, FALSE);
+INSERT INTO safeguarding_records (incident_number, title, incident_date, reported_date, incident_type, severity, location, description, immediate_action_taken, status, reported_by, vertical_id, confidential, external_authority_notified) VALUES
+('INC-2024-0001', 'Inappropriate behavior at Program Site', '2024-02-15', '2024-02-15', 'misconduct', 'medium', 'Program Site - Village XYZ', 'Inappropriate behavior observed during program activity', 'Person removed from activity immediately, investigation initiated', 'under_investigation', 1, 1, TRUE, FALSE);
 
 -- ============================================
 -- 18. SAFEGUARDING ACCESS LOG DATA
