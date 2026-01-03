@@ -203,34 +203,56 @@ export const staffValidation = [
 ];
 
 export const contactValidation = [
-  body('first_name')
+  body('firstName')
     .trim()
     .notEmpty()
     .withMessage('First name is required')
-    .isLength({ max: 50 })
-    .withMessage('First name cannot exceed 50 characters'),
-  body('last_name')
+    .isLength({ max: 100 })
+    .withMessage('First name cannot exceed 100 characters'),
+  body('lastName')
     .trim()
     .notEmpty()
     .withMessage('Last name is required')
-    .isLength({ max: 50 })
-    .withMessage('Last name cannot exceed 50 characters'),
+    .isLength({ max: 100 })
+    .withMessage('Last name cannot exceed 100 characters'),
   body('email')
-    .optional()
+    .optional({ checkFalsy: true })
     .isEmail()
     .withMessage('Please provide a valid email')
     .normalizeEmail(),
   body('phone')
-    .optional()
-    .isMobilePhone()
+    .optional({ checkFalsy: true })
+    .isString()
     .withMessage('Please provide a valid phone number'),
-  body('type')
-    .isIn(['donor', 'volunteer', 'vendor', 'partner', 'beneficiary'])
-    .withMessage('Invalid contact type'),
+  body('contact_type_id')
+    .notEmpty()
+    .withMessage('Contact type ID is required')
+    .isInt({ min: 1 })
+    .withMessage('Contact type ID must be a positive integer'),
   body('vertical_id')
-    .optional()
+    .optional({ checkFalsy: true })
     .isInt({ min: 1 })
     .withMessage('Vertical ID must be a positive integer'),
+  body('address')
+    .optional({ checkFalsy: true })
+    .isString()
+    .withMessage('Address must be a string'),
+  body('city')
+    .optional({ checkFalsy: true })
+    .isString()
+    .withMessage('City must be a string'),
+  body('state')
+    .optional({ checkFalsy: true })
+    .isString()
+    .withMessage('State must be a string'),
+  body('country')
+    .optional({ checkFalsy: true })
+    .isString()
+    .withMessage('Country must be a string'),
+  body('notes')
+    .optional({ checkFalsy: true })
+    .isString()
+    .withMessage('Notes must be a string'),
   handleValidationErrors,
 ];
 

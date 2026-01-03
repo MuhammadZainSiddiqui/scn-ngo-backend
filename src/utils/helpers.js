@@ -198,6 +198,30 @@ export const formatUserResponse = (user, { role = null } = {}) => {
   };
 };
 
+export const formatContactResponse = (contact) => {
+  if (!contact) return null;
+
+  return {
+    id: contact.id,
+    firstName: contact.first_name,
+    lastName: contact.last_name,
+    email: contact.email,
+    phone: contact.phone,
+    contact_type_id: contact.contact_type_id,
+    contact_type_name: contact.contact_type_name,
+    vertical_id: contact.vertical_id,
+    vertical_name: contact.vertical_name,
+    address: contact.address_line1,
+    city: contact.city,
+    state: contact.state,
+    country: contact.country,
+    notes: contact.notes,
+    status: contact.status,
+    created_at: contact.created_at,
+    updated_at: contact.updated_at,
+  };
+};
+
 export default {
   generatePagination,
   buildWhereClause,
@@ -221,4 +245,5 @@ export default {
   comparePassword,
   getUserWithoutPassword,
   formatUserResponse,
+  formatContactResponse,
 };
