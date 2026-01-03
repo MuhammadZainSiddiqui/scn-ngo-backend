@@ -104,17 +104,25 @@ export const requireVerticalAccess = (req, res, next) => {
     return next();
   }
   
-  const requestedVerticalId = req.params.verticalId || req.body.vertical_id;
-  
-  if (requestedVerticalId && requestedVerticalId !== req.user.verticalId) {
+  const requestedVerticalId = req.params.verticalId ?? req.body.vertical_id;
+  const requestedVerticalIdNum = requestedVerticalId ? parseInt(requestedVerticalId, 10) : null;
+  const userVerticalIdNum = req.user.verticalId ? parseInt(req.user.verticalId, 10) : null;
+
+  if (requestedVerticalIdNum && userVerticalIdNum && requestedVerticalIdNum !== userVerticalIdNum) {
     return res.status(403).json({
       success: false,
       message: 'Access denied to this vertical',
     });
   }
-  
-  req.verticalId = req.user.verticalId;
+
+  req.verticalId = userVerticalIdNum;
   next();
+};
+
+export const requireVertical = requireVerticalAccess;
+
+export const canAccessModule = (module, action = 'read') => {
+  return requirePermission(module, action);
 };
 
 export const checkOwnership = (resourceType) => {
@@ -178,5 +186,7 @@ export default {
   requirePermission,
   requireRole,
   requireVerticalAccess,
+  requireVertical,
+  canAccessModule,
   checkOwnership,
 };
