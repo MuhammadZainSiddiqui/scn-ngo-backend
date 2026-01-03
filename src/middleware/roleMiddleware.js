@@ -15,7 +15,7 @@ const rolePermissions = {
     users: { read: true, write: false, delete: false },
     donations: { read: true, write: true, delete: false },
     programs: { read: true, write: true, delete: false },
-    volunteers: { read: true, write: true, delete: false },
+    volunteers: { read: true, write: false, delete: false },
     staff: { read: true, write: false, delete: false },
     reports: { read: true, export: true },
     settings: { read: false, write: false },
@@ -30,6 +30,16 @@ const rolePermissions = {
     reports: { read: true, export: false },
     settings: { read: false, write: false },
     safeguarding: { read: false, write: false },
+  },
+  4: { // HR Lead
+    users: { read: true, write: false, delete: false },
+    donations: { read: true, write: false, delete: false },
+    programs: { read: true, write: false, delete: false },
+    volunteers: { read: true, write: true, delete: true },
+    staff: { read: true, write: true, delete: true },
+    reports: { read: true, export: true },
+    settings: { read: false, write: false },
+    safeguarding: { read: true, write: true },
   },
 };
 
