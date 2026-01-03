@@ -961,6 +961,253 @@ export const staffValidation = [
   handleValidationErrors,
 ];
 
+// New Staff Management API validations
+export const createStaffValidation = [
+  body('user_id')
+    .isInt({ min: 1 })
+    .withMessage('User ID is required and must be a positive integer')
+    .toInt(),
+  body('employee_id')
+    .optional()
+    .trim()
+    .isLength({ max: 50 })
+    .withMessage('Employee ID cannot exceed 50 characters'),
+  body('join_date')
+    .isISO8601()
+    .withMessage('Join date must be a valid date'),
+  body('employment_type')
+    .optional()
+    .isIn(['full_time', 'part_time', 'contract', 'intern'])
+    .withMessage('Employment type must be full_time, part_time, contract, or intern'),
+  body('designation')
+    .optional()
+    .trim()
+    .isLength({ max: 100 })
+    .withMessage('Designation cannot exceed 100 characters'),
+  body('department')
+    .optional()
+    .trim()
+    .isLength({ max: 100 })
+    .withMessage('Department cannot exceed 100 characters'),
+  body('reporting_to')
+    .optional()
+    .isInt({ min: 1 })
+    .withMessage('Reporting to must be a valid staff ID')
+    .toInt(),
+  body('salary')
+    .optional()
+    .isFloat({ min: 0 })
+    .withMessage('Salary must be a non-negative number')
+    .toFloat(),
+  body('bank_name')
+    .optional()
+    .trim()
+    .isLength({ max: 255 })
+    .withMessage('Bank name cannot exceed 255 characters'),
+  body('bank_account_number')
+    .optional()
+    .trim()
+    .isLength({ max: 50 })
+    .withMessage('Bank account number cannot exceed 50 characters'),
+  body('bank_ifsc')
+    .optional()
+    .trim()
+    .isLength({ max: 20 })
+    .withMessage('Bank IFSC cannot exceed 20 characters'),
+  body('pan_number')
+    .optional()
+    .trim()
+    .isLength({ max: 20 })
+    .withMessage('PAN number cannot exceed 20 characters'),
+  body('aadhar_number')
+    .optional()
+    .trim()
+    .isLength({ max: 20 })
+    .withMessage('Aadhar number cannot exceed 20 characters'),
+  body('uan_number')
+    .optional()
+    .trim()
+    .isLength({ max: 20 })
+    .withMessage('UAN number cannot exceed 20 characters'),
+  body('esic_number')
+    .optional()
+    .trim()
+    .isLength({ max: 20 })
+    .withMessage('ESIC number cannot exceed 20 characters'),
+  body('emergency_contact_name')
+    .optional()
+    .trim()
+    .isLength({ max: 255 })
+    .withMessage('Emergency contact name cannot exceed 255 characters'),
+  body('emergency_contact_phone')
+    .optional()
+    .trim()
+    .isLength({ min: 7, max: 20 })
+    .withMessage('Emergency contact phone must be between 7 and 20 characters'),
+  body('emergency_contact_relation')
+    .optional()
+    .trim()
+    .isLength({ max: 50 })
+    .withMessage('Emergency contact relation cannot exceed 50 characters'),
+  body('blood_group')
+    .optional()
+    .trim()
+    .isLength({ max: 5 })
+    .withMessage('Blood group cannot exceed 5 characters'),
+  body('date_of_birth')
+    .optional()
+    .isISO8601()
+    .withMessage('Date of birth must be a valid date'),
+  body('permanent_address')
+    .optional()
+    .trim()
+    .isLength({ max: 500 })
+    .withMessage('Permanent address cannot exceed 500 characters'),
+  body('current_address')
+    .optional()
+    .trim()
+    .isLength({ max: 500 })
+    .withMessage('Current address cannot exceed 500 characters'),
+  body('burnout_level')
+    .optional()
+    .isIn(['low', 'medium', 'high'])
+    .withMessage('Burnout level must be low, medium, or high'),
+  body('notes')
+    .optional()
+    .trim()
+    .isLength({ max: 1000 })
+    .withMessage('Notes cannot exceed 1000 characters'),
+  handleValidationErrors,
+];
+
+export const updateStaffValidation = [
+  body('employment_type')
+    .optional()
+    .isIn(['full_time', 'part_time', 'contract', 'intern'])
+    .withMessage('Employment type must be full_time, part_time, contract, or intern'),
+  body('designation')
+    .optional()
+    .trim()
+    .isLength({ max: 100 })
+    .withMessage('Designation cannot exceed 100 characters'),
+  body('department')
+    .optional()
+    .trim()
+    .isLength({ max: 100 })
+    .withMessage('Department cannot exceed 100 characters'),
+  body('reporting_to')
+    .optional()
+    .isInt({ min: 1 })
+    .withMessage('Reporting to must be a valid staff ID')
+    .toInt(),
+  body('salary')
+    .optional()
+    .isFloat({ min: 0 })
+    .withMessage('Salary must be a non-negative number')
+    .toFloat(),
+  body('bank_name')
+    .optional()
+    .trim()
+    .isLength({ max: 255 })
+    .withMessage('Bank name cannot exceed 255 characters'),
+  body('bank_account_number')
+    .optional()
+    .trim()
+    .isLength({ max: 50 })
+    .withMessage('Bank account number cannot exceed 50 characters'),
+  body('bank_ifsc')
+    .optional()
+    .trim()
+    .isLength({ max: 20 })
+    .withMessage('Bank IFSC cannot exceed 20 characters'),
+  body('pan_number')
+    .optional()
+    .trim()
+    .isLength({ max: 20 })
+    .withMessage('PAN number cannot exceed 20 characters'),
+  body('aadhar_number')
+    .optional()
+    .trim()
+    .isLength({ max: 20 })
+    .withMessage('Aadhar number cannot exceed 20 characters'),
+  body('uan_number')
+    .optional()
+    .trim()
+    .isLength({ max: 20 })
+    .withMessage('UAN number cannot exceed 20 characters'),
+  body('esic_number')
+    .optional()
+    .trim()
+    .isLength({ max: 20 })
+    .withMessage('ESIC number cannot exceed 20 characters'),
+  body('emergency_contact_name')
+    .optional()
+    .trim()
+    .isLength({ max: 255 })
+    .withMessage('Emergency contact name cannot exceed 255 characters'),
+  body('emergency_contact_phone')
+    .optional()
+    .trim()
+    .isLength({ min: 7, max: 20 })
+    .withMessage('Emergency contact phone must be between 7 and 20 characters'),
+  body('emergency_contact_relation')
+    .optional()
+    .trim()
+    .isLength({ max: 50 })
+    .withMessage('Emergency contact relation cannot exceed 50 characters'),
+  body('blood_group')
+    .optional()
+    .trim()
+    .isLength({ max: 5 })
+    .withMessage('Blood group cannot exceed 5 characters'),
+  body('date_of_birth')
+    .optional()
+    .isISO8601()
+    .withMessage('Date of birth must be a valid date'),
+  body('permanent_address')
+    .optional()
+    .trim()
+    .isLength({ max: 500 })
+    .withMessage('Permanent address cannot exceed 500 characters'),
+  body('current_address')
+    .optional()
+    .trim()
+    .isLength({ max: 500 })
+    .withMessage('Current address cannot exceed 500 characters'),
+  body('burnout_level')
+    .optional()
+    .isIn(['low', 'medium', 'high'])
+    .withMessage('Burnout level must be low, medium, or high'),
+  body('notes')
+    .optional()
+    .trim()
+    .isLength({ max: 1000 })
+    .withMessage('Notes cannot exceed 1000 characters'),
+  handleValidationErrors,
+];
+
+export const updateStaffStatusValidation = [
+  body('status')
+    .isIn(['active', 'on_leave', 'resigned', 'terminated'])
+    .withMessage('Status must be active, on_leave, resigned, or terminated'),
+  body('resignation_date')
+    .optional()
+    .isISO8601()
+    .withMessage('Resignation date must be a valid date'),
+  body('relieving_date')
+    .optional()
+    .isISO8601()
+    .withMessage('Relieving date must be a valid date'),
+  handleValidationErrors,
+];
+
+export const updateBurnoutLevelValidation = [
+  body('burnout_level')
+    .isIn(['low', 'medium', 'high'])
+    .withMessage('Burnout level must be low, medium, or high'),
+  handleValidationErrors,
+];
+
 export const contactValidation = [
   body('firstName')
     .trim()
@@ -1175,6 +1422,11 @@ export default {
   assignmentUpdateValidation,
 
   staffValidation,
+  createStaffValidation,
+  updateStaffValidation,
+  updateStaffStatusValidation,
+  updateBurnoutLevelValidation,
+
   contactValidation,
   validateEmail,
   validatePassword,
