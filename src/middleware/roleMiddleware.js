@@ -26,7 +26,7 @@ const rolePermissions = {
     donations: { read: true, write: false, delete: false },
     programs: { read: true, write: false, delete: false },
     volunteers: { read: true, write: false, delete: false },
-    staff: { read: false, write: false, delete: false },
+    staff: { read: true, write: false, delete: false },
     reports: { read: true, export: false },
     settings: { read: false, write: false },
     safeguarding: { read: false, write: false },

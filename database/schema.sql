@@ -325,6 +325,8 @@ CREATE TABLE staff (
     current_address TEXT,
     resignation_date DATE NULL,
     relieving_date DATE NULL,
+    burnout_level ENUM('low', 'medium', 'high') DEFAULT 'low' COMMENT 'Staff burnout risk level',
+    notes TEXT,
     status ENUM('active', 'on_leave', 'resigned', 'terminated') DEFAULT 'active',
     created_by INT UNSIGNED NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -336,8 +338,31 @@ CREATE TABLE staff (
     INDEX idx_user (user_id),
     INDEX idx_reporting_to (reporting_to),
     INDEX idx_status (status),
-    INDEX idx_join_date (join_date)
+    INDEX idx_join_date (join_date),
+    INDEX idx_burnout_level (burnout_level)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='Staff/Employee records';
+
+-- ============================================
+-- 11.5. STAFF CONTRACTS TABLE
+-- ============================================
+CREATE TABLE staff_contracts (
+    id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    staff_id INT UNSIGNED NOT NULL,
+    contract_number VARCHAR(50) NOT NULL UNIQUE,
+    start_date DATE NOT NULL,
+    end_date DATE NOT NULL,
+    contract_type ENUM('permanent', 'fixed_term', 'probation', 'consultancy') DEFAULT 'fixed_term',
+    renewal_date DATE NULL,
+    terms TEXT,
+    status ENUM('active', 'expired', 'terminated', 'renewed') DEFAULT 'active',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (staff_id) REFERENCES staff(id) ON DELETE CASCADE,
+    INDEX idx_staff (staff_id),
+    INDEX idx_contract_number (contract_number),
+    INDEX idx_dates (start_date, end_date),
+    INDEX idx_status (status)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='Staff contract records';
 
 -- ============================================
 -- 12. LEAVE RECORDS TABLE

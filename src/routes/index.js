@@ -8,6 +8,7 @@ import volunteerRoutes from './volunteerRoutes.js';
 import assignmentRoutes from './assignmentRoutes.js';
 import programRoutes from './programRoutes.js';
 import kpiRoutes from './kpiRoutes.js';
+import staffRoutes from './staffRoutes.js';
 import healthRoutes from './healthRoutes.js';
 
 const router = Router();
@@ -21,6 +22,7 @@ router.use('/volunteers', volunteerRoutes);
 router.use('/assignments', assignmentRoutes);
 router.use('/programs', programRoutes);
 router.use('/kpis', kpiRoutes);
+router.use('/staff', staffRoutes);
 router.use('/', healthRoutes);
 
 export default router;

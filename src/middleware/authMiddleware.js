@@ -137,6 +137,27 @@ export const requireFinanceRole = (req, res, next) => {
   next();
 };
 
+// HR role middleware - allows Super Admin (1) and HR Lead (4)
+export const requireHRRole = (req, res, next) => {
+  if (!req.user) {
+    return res.status(401).json({
+      success: false,
+      message: 'Authentication required',
+    });
+  }
+
+  // Allow Super Admin (1) and HR Lead (4)
+  if (![1, 4].includes(req.user.roleId)) {
+    return res.status(403).json({
+      success: false,
+      message: 'HR access required',
+      code: 'HR_ROLE_REQUIRED'
+    });
+  }
+
+  next();
+};
+
 // Vertical access middleware - enforces vertical isolation
 export const requireVerticalAccess = (req, res, next) => {
   if (!req.user) {
@@ -183,5 +204,6 @@ export default {
   generateToken,
   generateRefreshToken,
   requireFinanceRole,
+  requireHRRole,
   requireVerticalAccess,
 };
