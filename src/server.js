@@ -38,6 +38,10 @@ const startServer = async () => {
       console.log('   - POST /api/donations');
       console.log('   - GET  /api/allocations');
       console.log('   - POST /api/allocations');
+      console.log('   - GET  /api/volunteers');
+      console.log('   - POST /api/volunteers');
+      console.log('   - GET  /api/assignments');
+      console.log('   - POST /api/assignments');
       console.log('   - GET  /api/health');
     });
 

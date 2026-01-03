@@ -447,6 +447,251 @@ export const volunteerValidation = [
   handleValidationErrors,
 ];
 
+// Volunteers Management API validations
+export const createVolunteerValidation = [
+  body('first_name')
+    .trim()
+    .notEmpty()
+    .withMessage('First name is required')
+    .isLength({ max: 100 })
+    .withMessage('First name cannot exceed 100 characters'),
+  body('last_name')
+    .trim()
+    .notEmpty()
+    .withMessage('Last name is required')
+    .isLength({ max: 100 })
+    .withMessage('Last name cannot exceed 100 characters'),
+  body('email')
+    .optional({ checkFalsy: true })
+    .isEmail()
+    .withMessage('Please provide a valid email')
+    .normalizeEmail(),
+  body('phone')
+    .optional({ checkFalsy: true })
+    .trim()
+    .isLength({ min: 7, max: 20 })
+    .withMessage('Phone must be between 7 and 20 characters'),
+  body('tier')
+    .optional({ checkFalsy: true })
+    .trim()
+    .isLength({ max: 50 })
+    .withMessage('Tier cannot exceed 50 characters'),
+  body('status')
+    .optional({ checkFalsy: true })
+    .isIn(['active', 'inactive', 'on_hold'])
+    .withMessage('Status must be active, inactive, or on_hold'),
+  body('vertical_id')
+    .optional({ checkFalsy: true })
+    .isInt({ min: 1 })
+    .withMessage('Vertical ID must be a positive integer'),
+  body('insurance_provider')
+    .optional({ checkFalsy: true })
+    .trim()
+    .isLength({ max: 100 })
+    .withMessage('Insurance provider cannot exceed 100 characters'),
+  body('insurance_policy_number')
+    .optional({ checkFalsy: true })
+    .trim()
+    .isLength({ max: 100 })
+    .withMessage('Insurance policy number cannot exceed 100 characters'),
+  body('insurance_expiry_date')
+    .optional({ checkFalsy: true })
+    .isISO8601()
+    .withMessage('Insurance expiry date must be a valid ISO8601 date'),
+  body('emergency_contact_name')
+    .optional({ checkFalsy: true })
+    .trim()
+    .isLength({ max: 100 })
+    .withMessage('Emergency contact name cannot exceed 100 characters'),
+  body('emergency_contact_phone')
+    .optional({ checkFalsy: true })
+    .trim()
+    .isLength({ min: 7, max: 20 })
+    .withMessage('Emergency contact phone must be between 7 and 20 characters'),
+  body('notes')
+    .optional({ checkFalsy: true })
+    .trim()
+    .isLength({ max: 1000 })
+    .withMessage('Notes cannot exceed 1000 characters'),
+  handleValidationErrors,
+];
+
+export const updateVolunteerValidation = [
+  body('first_name')
+    .optional({ checkFalsy: true })
+    .trim()
+    .isLength({ max: 100 })
+    .withMessage('First name cannot exceed 100 characters'),
+  body('last_name')
+    .optional({ checkFalsy: true })
+    .trim()
+    .isLength({ max: 100 })
+    .withMessage('Last name cannot exceed 100 characters'),
+  body('email')
+    .optional({ checkFalsy: true })
+    .isEmail()
+    .withMessage('Please provide a valid email')
+    .normalizeEmail(),
+  body('phone')
+    .optional({ checkFalsy: true })
+    .trim()
+    .isLength({ min: 7, max: 20 })
+    .withMessage('Phone must be between 7 and 20 characters'),
+  body('tier')
+    .optional({ checkFalsy: true })
+    .trim()
+    .isLength({ max: 50 })
+    .withMessage('Tier cannot exceed 50 characters'),
+  body('status')
+    .optional({ checkFalsy: true })
+    .isIn(['active', 'inactive', 'on_hold'])
+    .withMessage('Status must be active, inactive, or on_hold'),
+  body('vertical_id')
+    .optional({ checkFalsy: true })
+    .isInt({ min: 1 })
+    .withMessage('Vertical ID must be a positive integer'),
+  body('insurance_provider')
+    .optional({ checkFalsy: true })
+    .trim()
+    .isLength({ max: 100 })
+    .withMessage('Insurance provider cannot exceed 100 characters'),
+  body('insurance_policy_number')
+    .optional({ checkFalsy: true })
+    .trim()
+    .isLength({ max: 100 })
+    .withMessage('Insurance policy number cannot exceed 100 characters'),
+  body('insurance_expiry_date')
+    .optional({ checkFalsy: true })
+    .isISO8601()
+    .withMessage('Insurance expiry date must be a valid ISO8601 date'),
+  body('emergency_contact_name')
+    .optional({ checkFalsy: true })
+    .trim()
+    .isLength({ max: 100 })
+    .withMessage('Emergency contact name cannot exceed 100 characters'),
+  body('emergency_contact_phone')
+    .optional({ checkFalsy: true })
+    .trim()
+    .isLength({ min: 7, max: 20 })
+    .withMessage('Emergency contact phone must be between 7 and 20 characters'),
+  body('notes')
+    .optional({ checkFalsy: true })
+    .trim()
+    .isLength({ max: 1000 })
+    .withMessage('Notes cannot exceed 1000 characters'),
+  handleValidationErrors,
+];
+
+export const volunteerHoursLogValidation = [
+  body('program_id')
+    .notEmpty()
+    .isInt({ min: 1 })
+    .withMessage('Program ID is required and must be a positive integer')
+    .toInt(),
+  body('work_date')
+    .notEmpty()
+    .isISO8601()
+    .withMessage('Work date is required and must be a valid ISO8601 date'),
+  body('hours')
+    .notEmpty()
+    .isFloat({ min: 0.25, max: 24 })
+    .withMessage('Hours must be between 0.25 and 24')
+    .toFloat(),
+  body('notes')
+    .optional({ checkFalsy: true })
+    .trim()
+    .isLength({ max: 500 })
+    .withMessage('Notes cannot exceed 500 characters'),
+  handleValidationErrors,
+];
+
+export const volunteerInsuranceUpdateValidation = [
+  body('insurance_provider')
+    .optional({ checkFalsy: true })
+    .trim()
+    .isLength({ max: 100 })
+    .withMessage('Insurance provider cannot exceed 100 characters'),
+  body('insurance_policy_number')
+    .optional({ checkFalsy: true })
+    .trim()
+    .isLength({ max: 100 })
+    .withMessage('Insurance policy number cannot exceed 100 characters'),
+  body('insurance_expiry_date')
+    .optional({ checkFalsy: true })
+    .isISO8601()
+    .withMessage('Insurance expiry date must be a valid ISO8601 date'),
+  body().custom((value, { req }) => {
+    const { insurance_provider, insurance_policy_number, insurance_expiry_date } = req.body;
+    if (!insurance_provider && !insurance_policy_number && !insurance_expiry_date) {
+      throw new Error('At least one insurance field must be provided');
+    }
+    return true;
+  }),
+  handleValidationErrors,
+];
+
+export const volunteerAssignmentValidation = [
+  body('volunteer_id')
+    .optional({ checkFalsy: true })
+    .isInt({ min: 1 })
+    .withMessage('Volunteer ID must be a positive integer')
+    .toInt(),
+  body('program_id')
+    .notEmpty()
+    .isInt({ min: 1 })
+    .withMessage('Program ID is required and must be a positive integer')
+    .toInt(),
+  body('start_date')
+    .notEmpty()
+    .isISO8601()
+    .withMessage('Start date is required and must be a valid ISO8601 date'),
+  body('end_date')
+    .optional({ checkFalsy: true })
+    .isISO8601()
+    .withMessage('End date must be a valid ISO8601 date'),
+  body('status')
+    .optional({ checkFalsy: true })
+    .isIn(['active', 'completed', 'inactive'])
+    .withMessage('Status must be active, completed, or inactive'),
+  body().custom((value, { req }) => {
+    if (req.body.start_date && req.body.end_date) {
+      const start = new Date(req.body.start_date);
+      const end = new Date(req.body.end_date);
+      if (!Number.isNaN(start.getTime()) && !Number.isNaN(end.getTime()) && end < start) {
+        throw new Error('End date cannot be before start date');
+      }
+    }
+    return true;
+  }),
+  handleValidationErrors,
+];
+
+export const assignmentUpdateValidation = [
+  body('start_date')
+    .optional({ checkFalsy: true })
+    .isISO8601()
+    .withMessage('Start date must be a valid ISO8601 date'),
+  body('end_date')
+    .optional({ checkFalsy: true })
+    .isISO8601()
+    .withMessage('End date must be a valid ISO8601 date'),
+  body('status')
+    .optional({ checkFalsy: true })
+    .isIn(['active', 'completed', 'inactive'])
+    .withMessage('Status must be active, completed, or inactive'),
+  body().custom((value, { req }) => {
+    if (req.body.start_date && req.body.end_date) {
+      const start = new Date(req.body.start_date);
+      const end = new Date(req.body.end_date);
+      if (!Number.isNaN(start.getTime()) && !Number.isNaN(end.getTime()) && end < start) {
+        throw new Error('End date cannot be before start date');
+      }
+    }
+    return true;
+  }),
+  handleValidationErrors,
+];
+
 export const staffValidation = [
   body('contact_id')
     .isInt({ min: 1 })
@@ -675,6 +920,12 @@ export default {
   searchValidation,
   programValidation,
   volunteerValidation,
+  createVolunteerValidation,
+  updateVolunteerValidation,
+  volunteerHoursLogValidation,
+  volunteerInsuranceUpdateValidation,
+  volunteerAssignmentValidation,
+  assignmentUpdateValidation,
   staffValidation,
   contactValidation,
   validateEmail,

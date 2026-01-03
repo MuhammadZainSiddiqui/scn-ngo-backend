@@ -4,6 +4,8 @@ import userRoutes from './userRoutes.js';
 import contactRoutes from './contactRoutes.js';
 import donationRoutes from './donationRoutes.js';
 import allocationRoutes from './allocationRoutes.js';
+import volunteerRoutes from './volunteerRoutes.js';
+import assignmentRoutes from './assignmentRoutes.js';
 import healthRoutes from './healthRoutes.js';
 
 const router = Router();
@@ -13,6 +15,8 @@ router.use('/users', userRoutes);
 router.use('/contacts', contactRoutes);
 router.use('/donations', donationRoutes);
 router.use('/allocations', allocationRoutes);
+router.use('/volunteers', volunteerRoutes);
+router.use('/assignments', assignmentRoutes);
 router.use('/', healthRoutes);
 
 export default router;
