@@ -92,9 +92,9 @@ export const idParamValidation = [
 
 export const donationValidation = [
   body('donor_id')
-    .optional()
+    .notEmpty()
     .isInt({ min: 1 })
-    .withMessage('Donor ID must be a positive integer'),
+    .withMessage('Donor ID is required and must be a positive integer'),
   body('amount')
     .isFloat({ min: 0.01 })
     .withMessage('Amount must be a positive number')
@@ -103,24 +103,299 @@ export const donationValidation = [
     .optional()
     .isIn(['INR', 'USD', 'EUR', 'GBP'])
     .withMessage('Invalid currency'),
-  body('donation_type')
-    .isIn(['one-time', 'recurring', 'pledge'])
-    .withMessage('Invalid donation type'),
-  body('program_id')
+  body('payment_method')
+    .isIn(['cash', 'cheque', 'bank_transfer', 'online', 'upi', 'card', 'other'])
+    .withMessage('Invalid payment method'),
+  body('payment_reference')
     .optional()
-    .isInt({ min: 1 })
-    .withMessage('Program ID must be a positive integer'),
+    .trim()
+    .isLength({ max: 100 })
+    .withMessage('Payment reference cannot exceed 100 characters'),
+  body('donation_type')
+    .optional()
+    .isIn(['one_time', 'recurring', 'pledge'])
+    .withMessage('Invalid donation type'),
+  body('frequency')
+    .optional()
+    .isIn(['monthly', 'quarterly', 'yearly'])
+    .withMessage('Invalid frequency'),
+  body('campaign')
+    .optional()
+    .trim()
+    .isLength({ max: 255 })
+    .withMessage('Campaign cannot exceed 255 characters'),
+  body('purpose')
+    .optional()
+    .trim()
+    .isLength({ max: 1000 })
+    .withMessage('Purpose cannot exceed 1000 characters'),
+  body('anonymous')
+    .optional()
+    .isBoolean()
+    .withMessage('Anonymous must be a boolean'),
   body('vertical_id')
     .optional()
     .isInt({ min: 1 })
     .withMessage('Vertical ID must be a positive integer'),
+  body('program_id')
+    .optional()
+    .isInt({ min: 1 })
+    .withMessage('Program ID must be a positive integer'),
   body('notes')
     .optional()
-    .isString()
+    .trim()
+    .isLength({ max: 1000 })
+    .withMessage('Notes cannot exceed 1000 characters'),
+  body('donation_date')
+    .optional()
+    .isISO8601()
+    .withMessage('Invalid donation date format'),
+  handleValidationErrors,
+];
+
+export const updateDonationValidation = [
+  body('amount')
+    .optional()
+    .isFloat({ min: 0.01 })
+    .withMessage('Amount must be a positive number')
+    .toFloat(),
+  body('currency')
+    .optional()
+    .isIn(['INR', 'USD', 'EUR', 'GBP'])
+    .withMessage('Invalid currency'),
+  body('payment_method')
+    .optional()
+    .isIn(['cash', 'cheque', 'bank_transfer', 'online', 'upi', 'card', 'other'])
+    .withMessage('Invalid payment method'),
+  body('payment_reference')
+    .optional()
+    .trim()
+    .isLength({ max: 100 })
+    .withMessage('Payment reference cannot exceed 100 characters'),
+  body('donation_type')
+    .optional()
+    .isIn(['one_time', 'recurring', 'pledge'])
+    .withMessage('Invalid donation type'),
+  body('frequency')
+    .optional()
+    .isIn(['monthly', 'quarterly', 'yearly'])
+    .withMessage('Invalid frequency'),
+  body('campaign')
+    .optional()
+    .trim()
+    .isLength({ max: 255 })
+    .withMessage('Campaign cannot exceed 255 characters'),
+  body('purpose')
+    .optional()
+    .trim()
+    .isLength({ max: 1000 })
+    .withMessage('Purpose cannot exceed 1000 characters'),
+  body('anonymous')
+    .optional()
+    .isBoolean()
+    .withMessage('Anonymous must be a boolean'),
+  body('vertical_id')
+    .optional()
+    .isInt({ min: 1 })
+    .withMessage('Vertical ID must be a positive integer'),
+  body('program_id')
+    .optional()
+    .isInt({ min: 1 })
+    .withMessage('Program ID must be a positive integer'),
+  body('notes')
+    .optional()
+    .trim()
     .isLength({ max: 1000 })
     .withMessage('Notes cannot exceed 1000 characters'),
   handleValidationErrors,
 ];
+
+export const allocationValidation = [
+  body('donation_id')
+    .notEmpty()
+    .isInt({ min: 1 })
+    .withMessage('Donation ID is required and must be a positive integer'),
+  body('vertical_id')
+    .optional()
+    .isInt({ min: 1 })
+    .withMessage('Vertical ID must be a positive integer'),
+  body('program_id')
+    .optional()
+    .isInt({ min: 1 })
+    .withMessage('Program ID must be a positive integer'),
+  body('amount')
+    .isFloat({ min: 0.01 })
+    .withMessage('Amount must be a positive number')
+    .toFloat(),
+  body('allocation_percentage')
+    .optional()
+    .isFloat({ min: 0.01, max: 100 })
+    .withMessage('Allocation percentage must be between 0.01 and 100')
+    .toFloat(),
+  body('notes')
+    .optional()
+    .trim()
+    .isLength({ max: 500 })
+    .withMessage('Notes cannot exceed 500 characters'),
+  body().custom((value, { req }) => {
+    if (!req.body.vertical_id && !req.body.program_id) {
+      throw new Error('Either vertical_id or program_id must be provided');
+    }
+    return true;
+  }),
+  handleValidationErrors,
+];
+
+export const updateAllocationValidation = [
+  body('vertical_id')
+    .optional()
+    .isInt({ min: 1 })
+    .withMessage('Vertical ID must be a positive integer'),
+  body('program_id')
+    .optional()
+    .isInt({ min: 1 })
+    .withMessage('Program ID must be a positive integer'),
+  body('amount')
+    .optional()
+    .isFloat({ min: 0.01 })
+    .withMessage('Amount must be a positive number')
+    .toFloat(),
+  body('allocation_percentage')
+    .optional()
+    .isFloat({ min: 0.01, max: 100 })
+    .withMessage('Allocation percentage must be between 0.01 and 100')
+    .toFloat(),
+  body('notes')
+    .optional()
+    .trim()
+    .isLength({ max: 500 })
+    .withMessage('Notes cannot exceed 500 characters'),
+  handleValidationErrors,
+];
+
+export const reallocateValidation = [
+  body('new_vertical_id')
+    .notEmpty()
+    .isInt({ min: 1 })
+    .withMessage('New vertical ID is required and must be a positive integer'),
+  body('new_program_id')
+    .optional()
+    .isInt({ min: 1 })
+    .withMessage('New program ID must be a positive integer'),
+  handleValidationErrors,
+];
+
+export const confirmDonationValidation = [
+  body('allocations')
+    .optional()
+    .isArray()
+    .withMessage('Allocations must be an array'),
+  body('allocations.*.vertical_id')
+    .optional()
+    .isInt({ min: 1 })
+    .withMessage('Vertical ID must be a positive integer'),
+  body('allocations.*.program_id')
+    .optional()
+    .isInt({ min: 1 })
+    .withMessage('Program ID must be a positive integer'),
+  body('allocations.*.amount')
+    .optional()
+    .isFloat({ min: 0.01 })
+    .withMessage('Allocation amount must be positive'),
+  body('generate_receipt')
+    .optional()
+    .isBoolean()
+    .withMessage('Generate receipt must be a boolean'),
+  handleValidationErrors,
+];
+
+export const searchValidation = [
+  query('search')
+    .trim()
+    .notEmpty()
+    .withMessage('Search term is required')
+    .isLength({ min: 2, max: 100 })
+    .withMessage('Search term must be between 2 and 100 characters'),
+  handleValidationErrors,
+];
+
+export const validateAmount = (amount) => {
+  if (typeof amount !== 'number' || amount <= 0) {
+    return false;
+  }
+  // Check for reasonable precision (2 decimal places for currency)
+  const decimalPlaces = (amount.toString().split('.')[1] || '').length;
+  if (decimalPlaces > 2) {
+    return false;
+  }
+  return true;
+};
+
+export const validateReceiptGeneration = (donation) => {
+  if (!donation) {
+    return { isValid: false, error: 'Donation not found' };
+  }
+  
+  if (donation.payment_status !== 'received') {
+    return { isValid: false, error: 'Can only issue receipt for confirmed donations' };
+  }
+  
+  if (donation.receipt_number) {
+    return { isValid: false, error: 'Receipt already issued for this donation' };
+  }
+  
+  return { isValid: true };
+};
+
+export const validateDonationInput = (data) => {
+  const errors = [];
+
+  if (!data.donor_id) {
+    errors.push({ field: 'donor_id', message: 'Donor ID is required' });
+  }
+
+  if (!data.amount || !validateAmount(data.amount)) {
+    errors.push({ field: 'amount', message: 'Valid positive amount is required' });
+  }
+
+  if (!data.payment_method) {
+    errors.push({ field: 'payment_method', message: 'Payment method is required' });
+  }
+
+  if (data.donation_date && new Date(data.donation_date) > new Date()) {
+    errors.push({ field: 'donation_date', message: 'Donation date cannot be in the future' });
+  }
+
+  if (data.currency && !['INR', 'USD', 'EUR', 'GBP'].includes(data.currency)) {
+    errors.push({ field: 'currency', message: 'Invalid currency' });
+  }
+
+  return {
+    isValid: errors.length === 0,
+    errors
+  };
+};
+
+export const validateAllocationInput = (data) => {
+  const errors = [];
+
+  if (!data.donation_id) {
+    errors.push({ field: 'donation_id', message: 'Donation ID is required' });
+  }
+
+  if (!data.amount || !validateAmount(data.amount)) {
+    errors.push({ field: 'amount', message: 'Valid positive amount is required' });
+  }
+
+  if (!data.vertical_id && !data.program_id) {
+    errors.push({ field: 'allocation', message: 'Either vertical_id or program_id must be provided' });
+  }
+
+  return {
+    isValid: errors.length === 0,
+    errors
+  };
+};
 
 export const programValidation = [
   body('name')
@@ -392,6 +667,12 @@ export default {
   paginationValidation,
   idParamValidation,
   donationValidation,
+  updateDonationValidation,
+  allocationValidation,
+  updateAllocationValidation,
+  reallocateValidation,
+  confirmDonationValidation,
+  searchValidation,
   programValidation,
   volunteerValidation,
   staffValidation,
@@ -404,4 +685,8 @@ export default {
   validatePasswordStrength,
   validateEmailUniqueness,
   validateRoleExists,
+  validateAmount,
+  validateReceiptGeneration,
+  validateDonationInput,
+  validateAllocationInput,
 };
