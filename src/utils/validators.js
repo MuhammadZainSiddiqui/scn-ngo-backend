@@ -1,4 +1,5 @@
 import { body, param, query, validationResult } from 'express-validator';
+import { userModel, roleModel } from '../models/queryHelpers.js';
 
 export const handleValidationErrors = (req, res, next) => {
   const errors = validationResult(req);
@@ -303,6 +304,87 @@ export const sanitizeUserData = (user) => {
   return safeUser;
 };
 
+export const validateUserInput = [
+  body('firstName')
+    .trim()
+    .notEmpty()
+    .withMessage('First name is required')
+    .isLength({ max: 100 })
+    .withMessage('First name cannot exceed 100 characters'),
+  body('lastName')
+    .trim()
+    .notEmpty()
+    .withMessage('Last name is required')
+    .isLength({ max: 100 })
+    .withMessage('Last name cannot exceed 100 characters'),
+  body('email')
+    .isEmail()
+    .withMessage('Please provide a valid email')
+    .normalizeEmail()
+    .custom(async (email, { req }) => {
+      const existingUser = await userModel.findByEmail(email);
+      if (existingUser && (!req.params.id || existingUser.id !== parseInt(req.params.id, 10))) {
+        throw new Error('Email already exists');
+      }
+      return true;
+    }),
+  body('password')
+    .if((value, { req }) => req.method === 'POST')
+    .isLength({ min: 8 })
+    .withMessage('Password must be at least 8 characters')
+    .matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]/)
+    .withMessage('Password must contain uppercase, lowercase, number, and special character'),
+  body('role_id')
+    .isInt({ min: 1 })
+    .withMessage('Role ID must be a valid integer')
+    .custom(async (roleId) => {
+      const role = await roleModel.findById(roleId);
+      if (!role) {
+        throw new Error('Invalid role_id');
+      }
+      return true;
+    }),
+  body('vertical_id')
+    .optional()
+    .isInt({ min: 1 })
+    .withMessage('Vertical ID must be a valid integer'),
+  body('status')
+    .optional()
+    .isIn(['active', 'inactive', 'suspended'])
+    .withMessage('Status must be active, inactive, or suspended'),
+  handleValidationErrors,
+];
+
+export const validatePasswordStrength = [
+  body('oldPassword')
+    .notEmpty()
+    .withMessage('Current password is required'),
+  body('newPassword')
+    .isLength({ min: 8 })
+    .withMessage('New password must be at least 8 characters')
+    .matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]/)
+    .withMessage('New password must contain uppercase, lowercase, number, and special character'),
+  handleValidationErrors,
+];
+
+export const validateEmailUniqueness = async (email, excludeId = null) => {
+  return await userModel.checkEmailExists(email, excludeId);
+};
+
+export const validateRoleExists = [
+  body('role_id')
+    .isInt({ min: 1 })
+    .withMessage('Role ID must be a valid integer')
+    .custom(async (roleId) => {
+      const role = await roleModel.findById(roleId);
+      if (!role) {
+        throw new Error('Invalid role_id');
+      }
+      return true;
+    }),
+  handleValidationErrors,
+];
+
 export default {
   handleValidationErrors,
   registerValidation,
@@ -318,4 +400,8 @@ export default {
   validatePassword,
   validateUser,
   sanitizeUserData,
+  validateUserInput,
+  validatePasswordStrength,
+  validateEmailUniqueness,
+  validateRoleExists,
 };
