@@ -22,6 +22,10 @@ import inventoryRoutes from './inventoryRoutes.js';
 import safeguardingRoutes from './safeguardingRoutes.js';
 import exceptionRoutes from './exceptionRoutes.js';
 import auditLogRoutes from './auditLogRoutes.js';
+import messageRoutes from './messageRoutes.js';
+import conversationRoutes from './conversationRoutes.js';
+import notificationRoutes from './notificationRoutes.js';
+import messagingAdminRoutes from './messagingAdminRoutes.js';
 import healthRoutes from './healthRoutes.js';
 
 const router = Router();
@@ -50,6 +54,10 @@ router.use('/requisitions', requisitionRoutes);
 router.use('/inventory', inventoryRoutes);
 router.use('/safeguarding', safeguardingRoutes);
 router.use('/exceptions', exceptionRoutes);
+router.use('/messages', messageRoutes);
+router.use('/conversations', conversationRoutes);
+router.use('/notifications', notificationRoutes);
+router.use('/messaging-admin', messagingAdminRoutes);
 router.use('/audit-logs', auditLogRoutes);
 router.use('/', healthRoutes);
 
