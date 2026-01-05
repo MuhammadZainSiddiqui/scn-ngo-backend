@@ -20,6 +20,7 @@ import vendorRoutes from './vendorRoutes.js';
 import requisitionRoutes from './requisitionRoutes.js';
 import inventoryRoutes from './inventoryRoutes.js';
 import safeguardingRoutes from './safeguardingRoutes.js';
+import exceptionRoutes from './exceptionRoutes.js';
 import auditLogRoutes from './auditLogRoutes.js';
 import healthRoutes from './healthRoutes.js';
 
@@ -48,6 +49,7 @@ router.use('/vendors', vendorRoutes);
 router.use('/requisitions', requisitionRoutes);
 router.use('/inventory', inventoryRoutes);
 router.use('/safeguarding', safeguardingRoutes);
+router.use('/exceptions', exceptionRoutes);
 router.use('/audit-logs', auditLogRoutes);
 router.use('/', healthRoutes);
 
