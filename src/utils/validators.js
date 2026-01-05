@@ -2559,3 +2559,175 @@ export const createStockTransactionValidation = [
     .withMessage('Vertical ID is required and must be a positive integer'),
   handleValidationErrors,
 ];
+
+export const createExceptionValidation = [
+  body('title')
+    .trim()
+    .notEmpty()
+    .withMessage('Title is required')
+    .isLength({ max: 255 })
+    .withMessage('Title cannot exceed 255 characters'),
+  body('description')
+    .trim()
+    .notEmpty()
+    .withMessage('Description is required')
+    .isLength({ min: 10 })
+    .withMessage('Description must be at least 10 characters long'),
+  body('category')
+    .optional()
+    .trim()
+    .isLength({ max: 100 })
+    .withMessage('Category cannot exceed 100 characters'),
+  body('severity')
+    .optional()
+    .isIn(['low', 'medium', 'high', 'critical'])
+    .withMessage('Invalid severity level'),
+  body('vertical_id')
+    .optional()
+    .isInt({ min: 1 })
+    .withMessage('Vertical ID must be a positive integer'),
+  body('program_id')
+    .optional()
+    .isInt({ min: 1 })
+    .withMessage('Program ID must be a positive integer'),
+  body('assigned_to')
+    .optional()
+    .isInt({ min: 1 })
+    .withMessage('Assigned to user ID must be a positive integer'),
+  body('priority')
+    .optional()
+    .isBoolean()
+    .withMessage('Priority must be a boolean'),
+  body('due_date')
+    .optional()
+    .isISO8601()
+    .withMessage('Invalid due date format'),
+  body('tags')
+    .optional()
+    .trim()
+    .isLength({ max: 500 })
+    .withMessage('Tags cannot exceed 500 characters'),
+  body('notes')
+    .optional()
+    .trim()
+    .isLength({ max: 1000 })
+    .withMessage('Notes cannot exceed 1000 characters'),
+  handleValidationErrors,
+];
+
+export const updateExceptionValidation = [
+  body('title')
+    .optional()
+    .trim()
+    .notEmpty()
+    .withMessage('Title cannot be empty')
+    .isLength({ max: 255 })
+    .withMessage('Title cannot exceed 255 characters'),
+  body('description')
+    .optional()
+    .trim()
+    .notEmpty()
+    .withMessage('Description cannot be empty'),
+  body('category')
+    .optional()
+    .trim()
+    .isLength({ max: 100 })
+    .withMessage('Category cannot exceed 100 characters'),
+  body('severity')
+    .optional()
+    .isIn(['low', 'medium', 'high', 'critical'])
+    .withMessage('Invalid severity level'),
+  body('status')
+    .optional()
+    .isIn(['open', 'in_progress', 'resolved', 'closed'])
+    .withMessage('Invalid status'),
+  body('vertical_id')
+    .optional()
+    .isInt({ min: 1 })
+    .withMessage('Vertical ID must be a positive integer'),
+  body('program_id')
+    .optional()
+    .isInt({ min: 1 })
+    .withMessage('Program ID must be a positive integer'),
+  body('assigned_to')
+    .optional()
+    .isInt({ min: 1 })
+    .withMessage('Assigned to user ID must be a positive integer'),
+  body('priority')
+    .optional()
+    .isBoolean()
+    .withMessage('Priority must be a boolean'),
+  body('due_date')
+    .optional()
+    .isISO8601()
+    .withMessage('Invalid due date format'),
+  body('tags')
+    .optional()
+    .trim()
+    .isLength({ max: 500 })
+    .withMessage('Tags cannot exceed 500 characters'),
+  body('notes')
+    .optional()
+    .trim()
+    .isLength({ max: 1000 })
+    .withMessage('Notes cannot exceed 1000 characters'),
+  handleValidationErrors,
+];
+
+export const updateExceptionStatusValidation = [
+  body('status')
+    .notEmpty()
+    .isIn(['open', 'in_progress', 'resolved', 'closed'])
+    .withMessage('Invalid status'),
+  handleValidationErrors,
+];
+
+export const assignExceptionValidation = [
+  body('assigned_to')
+    .notEmpty()
+    .isInt({ min: 1 })
+    .withMessage('Assigned to user ID is required and must be a positive integer'),
+  handleValidationErrors,
+];
+
+export const resolveExceptionValidation = [
+  body('resolution_notes')
+    .trim()
+    .notEmpty()
+    .withMessage('Resolution notes are required')
+    .isLength({ min: 5 })
+    .withMessage('Resolution notes must be at least 5 characters long'),
+  handleValidationErrors,
+];
+
+export const escalateExceptionValidation = [
+  body('reason')
+    .trim()
+    .notEmpty()
+    .withMessage('Reason for escalation is required')
+    .isLength({ min: 5 })
+    .withMessage('Reason must be at least 5 characters long'),
+  body('escalated_to_user_id')
+    .optional()
+    .isInt({ min: 1 })
+    .withMessage('Escalated to user ID must be a positive integer'),
+  body('escalation_level')
+    .optional()
+    .isInt({ min: 1, max: 3 })
+    .withMessage('Escalation level must be between 1 and 3'),
+  handleValidationErrors,
+];
+
+export const addCommentValidation = [
+  body('comment')
+    .trim()
+    .notEmpty()
+    .withMessage('Comment is required')
+    .isLength({ min: 1, max: 2000 })
+    .withMessage('Comment must be between 1 and 2000 characters'),
+  body('is_internal')
+    .optional()
+    .isBoolean()
+    .withMessage('Is internal must be a boolean'),
+  handleValidationErrors,
+];
