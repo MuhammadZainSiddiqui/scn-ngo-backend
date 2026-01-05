@@ -2731,3 +2731,181 @@ export const addCommentValidation = [
     .withMessage('Is internal must be a boolean'),
   handleValidationErrors,
 ];
+
+// ============================================
+// MESSAGING SYSTEM VALIDATORS
+// ============================================
+
+export const createMessageValidation = [
+  body('receiver_id')
+    .notEmpty()
+    .isInt({ min: 1 })
+    .withMessage('Receiver ID is required and must be a positive integer'),
+  body('subject')
+    .optional()
+    .trim()
+    .isLength({ max: 255 })
+    .withMessage('Subject cannot exceed 255 characters'),
+  body('body')
+    .trim()
+    .notEmpty()
+    .withMessage('Message body is required')
+    .isLength({ min: 1, max: 5000 })
+    .withMessage('Message body must be between 1 and 5000 characters'),
+  body('priority')
+    .optional()
+    .isIn(['low', 'medium', 'high'])
+    .withMessage('Priority must be low, medium, or high'),
+  body('vertical_id')
+    .optional()
+    .isInt({ min: 1 })
+    .withMessage('Vertical ID must be a positive integer'),
+  handleValidationErrors,
+];
+
+export const updateMessageValidation = [
+  body('subject')
+    .optional()
+    .trim()
+    .isLength({ max: 255 })
+    .withMessage('Subject cannot exceed 255 characters'),
+  body('body')
+    .optional()
+    .trim()
+    .isLength({ min: 1, max: 5000 })
+    .withMessage('Message body must be between 1 and 5000 characters'),
+  body('priority')
+    .optional()
+    .isIn(['low', 'medium', 'high'])
+    .withMessage('Priority must be low, medium, or high'),
+  handleValidationErrors,
+];
+
+export const bulkOperationValidation = [
+  body('message_ids')
+    .isArray({ min: 1 })
+    .withMessage('message_ids must be a non-empty array'),
+  body('message_ids.*')
+    .isInt({ min: 1 })
+    .withMessage('Each message ID must be a positive integer'),
+  handleValidationErrors,
+];
+
+export const createConversationValidation = [
+  body('name')
+    .trim()
+    .notEmpty()
+    .withMessage('Conversation name is required')
+    .isLength({ min: 3, max: 100 })
+    .withMessage('Conversation name must be between 3 and 100 characters'),
+  body('description')
+    .optional()
+    .trim()
+    .isLength({ max: 500 })
+    .withMessage('Description cannot exceed 500 characters'),
+  body('conversation_type')
+    .optional()
+    .isIn(['group', 'announcement', 'notification'])
+    .withMessage('Conversation type must be group, announcement, or notification'),
+  body('vertical_id')
+    .optional()
+    .isInt({ min: 1 })
+    .withMessage('Vertical ID must be a positive integer'),
+  body('member_ids')
+    .optional()
+    .isArray()
+    .withMessage('member_ids must be an array'),
+  body('member_ids.*')
+    .optional()
+    .isInt({ min: 1 })
+    .withMessage('Each member ID must be a positive integer'),
+  handleValidationErrors,
+];
+
+export const updateConversationValidation = [
+  body('name')
+    .optional()
+    .trim()
+    .isLength({ min: 3, max: 100 })
+    .withMessage('Conversation name must be between 3 and 100 characters'),
+  body('description')
+    .optional()
+    .trim()
+    .isLength({ max: 500 })
+    .withMessage('Description cannot exceed 500 characters'),
+  body('is_archived')
+    .optional()
+    .isBoolean()
+    .withMessage('is_archived must be a boolean'),
+  handleValidationErrors,
+];
+
+export const sendConversationMessageValidation = [
+  body('body')
+    .trim()
+    .notEmpty()
+    .withMessage('Message body is required')
+    .isLength({ min: 1, max: 5000 })
+    .withMessage('Message body must be between 1 and 5000 characters'),
+  handleValidationErrors,
+];
+
+export const updateNotificationPreferencesValidation = [
+  body('email_on_message')
+    .optional()
+    .isBoolean()
+    .withMessage('email_on_message must be a boolean'),
+  body('email_on_assignment')
+    .optional()
+    .isBoolean()
+    .withMessage('email_on_assignment must be a boolean'),
+  body('email_on_alert')
+    .optional()
+    .isBoolean()
+    .withMessage('email_on_alert must be a boolean'),
+  body('in_app_only')
+    .optional()
+    .isBoolean()
+    .withMessage('in_app_only must be a boolean'),
+  body('do_not_disturb')
+    .optional()
+    .isBoolean()
+    .withMessage('do_not_disturb must be a boolean'),
+  body('dnd_start_time')
+    .optional()
+    .matches(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]$/)
+    .withMessage('dnd_start_time must be in HH:MM:SS format'),
+  body('dnd_end_time')
+    .optional()
+    .matches(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]$/)
+    .withMessage('dnd_end_time must be in HH:MM:SS format'),
+  handleValidationErrors,
+];
+
+export const sendAnnouncementValidation = [
+  body('title')
+    .trim()
+    .notEmpty()
+    .withMessage('Title is required')
+    .isLength({ max: 255 })
+    .withMessage('Title cannot exceed 255 characters'),
+  body('body')
+    .trim()
+    .notEmpty()
+    .withMessage('Body is required')
+    .isLength({ min: 1, max: 1000 })
+    .withMessage('Body must be between 1 and 1000 characters'),
+  body('vertical_id')
+    .optional()
+    .isInt({ min: 1 })
+    .withMessage('Vertical ID must be a positive integer'),
+  body('priority')
+    .optional()
+    .isIn(['low', 'medium', 'high'])
+    .withMessage('Priority must be low, medium, or high'),
+  body('recipient_role_id')
+    .optional()
+    .isInt({ min: 1 })
+    .withMessage('Recipient role ID must be a positive integer'),
+  handleValidationErrors,
+];
