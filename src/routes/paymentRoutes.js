@@ -1,5 +1,6 @@
 import { Router } from 'express';
-import { authenticateToken, requireRole, requireVerticalAccess } from '../middleware/authMiddleware.js';
+import { verifyToken, requireVerticalAccess } from '../middleware/authMiddleware.js';
+import { requireRole } from '../middleware/roleMiddleware.js';
 import { 
   recordPaymentValidation,
   paginationValidation,
@@ -9,7 +10,7 @@ import paymentController from '../controllers/paymentController.js';
 
 const router = Router();
 
-router.use(authenticateToken);
+router.use(verifyToken);
 
 // Finance operations require Super Admin (1) or Vertical Lead (2)
 const requireFinanceAccess = requireRole(1, 2);

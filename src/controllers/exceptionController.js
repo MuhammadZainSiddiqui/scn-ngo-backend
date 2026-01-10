@@ -1,5 +1,5 @@
-import Exception from '../models/Exception.js';
-import AuditLog from '../models/AuditLog.js';
+import { Exception } from '../models/Exception.js';
+import { AuditLog } from '../models/AuditLog.js';
 
 export const exceptionController = {
   async getAllExceptions(req, res) {

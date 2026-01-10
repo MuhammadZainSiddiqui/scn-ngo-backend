@@ -392,15 +392,15 @@ export const authController = {
           ...formatUserResponse(getUserWithoutPassword(user)),
           role: user.role_id
             ? {
-                id: user.role_id,
-                name: user.role_name,
-              }
+              id: user.role_id,
+              name: user.role_name,
+            }
             : null,
           vertical: user.vertical_id
             ? {
-                id: user.vertical_id,
-                name: user.vertical_name,
-              }
+              id: user.vertical_id,
+              name: user.vertical_name,
+            }
             : null,
           created_at: user.created_at,
         },

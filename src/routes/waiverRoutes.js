@@ -1,5 +1,6 @@
 import { Router } from 'express';
-import { authenticateToken, requireRole, requireVerticalAccess } from '../middleware/authMiddleware.js';
+import { verifyToken, requireVerticalAccess } from '../middleware/authMiddleware.js';
+import { requireRole } from '../middleware/roleMiddleware.js';
 import { 
   createWaiverValidation, 
   reviewWaiverValidation,
@@ -10,7 +11,7 @@ import waiverController from '../controllers/waiverController.js';
 
 const router = Router();
 
-router.use(authenticateToken);
+router.use(verifyToken);
 
 // Super Admin only for waiver approval/rejection
 const requireSuperAdmin = requireRole(1);
