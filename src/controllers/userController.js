@@ -1,7 +1,6 @@
 import bcrypt from 'bcryptjs';
 import { userModel, roleModel, verticalModel } from '../models/queryHelpers.js';
-import { authenticateToken } from '../middleware/authMiddleware.js';
-import { requireRole, requireVerticalAccess, checkOwnership } from '../middleware/roleMiddleware.js';
+import { requireRole } from '../middleware/roleMiddleware.js';
 import { asyncHandler, successResponse, errorResponse } from '../middleware/errorHandler.js';
 import { 
   validateUserInput, 
@@ -14,7 +13,6 @@ import {
 
 export const userController = {
   getAllUsers: [
-    authenticateToken,
     paginationValidation,
     asyncHandler(async (req, res) => {
       const { page = 1, limit = 10, status, role_id, vertical_id, search, sort = 'created_at', order = 'desc' } = req.query;
@@ -51,7 +49,6 @@ export const userController = {
   ],
   
   getUserById: [
-    authenticateToken,
     idParamValidation,
     asyncHandler(async (req, res) => {
       const userId = parseInt(req.params.id, 10);
@@ -78,7 +75,6 @@ export const userController = {
   ],
   
   getCurrentUser: [
-    authenticateToken,
     asyncHandler(async (req, res) => {
       const user = await userModel.findById(req.user.id);
       
@@ -93,7 +89,6 @@ export const userController = {
   ],
   
   createUser: [
-    authenticateToken,
     requireRole(1),
     validateUserInput,
     asyncHandler(async (req, res) => {
@@ -138,7 +133,6 @@ export const userController = {
   ],
   
   updateUser: [
-    authenticateToken,
     requireRole(1, 2),
     idParamValidation,
     asyncHandler(async (req, res) => {
@@ -190,7 +184,6 @@ export const userController = {
   ],
   
   updateUserRole: [
-    authenticateToken,
     requireRole(1),
     idParamValidation,
     validateRoleExists,
@@ -215,7 +208,6 @@ export const userController = {
   ],
   
   updateUserStatus: [
-    authenticateToken,
     requireRole(1),
     idParamValidation,
     asyncHandler(async (req, res) => {
@@ -239,7 +231,6 @@ export const userController = {
   ],
   
   changePassword: [
-    authenticateToken,
     idParamValidation,
     validatePasswordStrength,
     asyncHandler(async (req, res) => {
@@ -268,7 +259,6 @@ export const userController = {
   ],
   
   deleteUser: [
-    authenticateToken,
     requireRole(1),
     idParamValidation,
     asyncHandler(async (req, res) => {
@@ -285,7 +275,6 @@ export const userController = {
   ],
   
   searchUsers: [
-    authenticateToken,
     paginationValidation,
     asyncHandler(async (req, res) => {
       const { q, page = 1, limit = 10 } = req.query;
@@ -309,7 +298,6 @@ export const userController = {
   ],
   
   getUsersByRole: [
-    authenticateToken,
     paginationValidation,
     asyncHandler(async (req, res) => {
       const { roleId } = req.params;
@@ -335,7 +323,6 @@ export const userController = {
   ],
   
   getUsersByVertical: [
-    authenticateToken,
     paginationValidation,
     asyncHandler(async (req, res) => {
       const { verticalId } = req.params;
@@ -366,7 +353,6 @@ export const userController = {
   ],
   
   getUserStats: [
-    authenticateToken,
     requireRole(1),
     asyncHandler(async (req, res) => {
       const stats = await userModel.getUserStats();
@@ -395,7 +381,6 @@ export const userController = {
   ],
   
   getRoles: [
-    authenticateToken,
     asyncHandler(async (req, res) => {
       const roles = await roleModel.findAll();
       successResponse(res, 200, { roles });
@@ -403,7 +388,6 @@ export const userController = {
   ],
   
   getRoleById: [
-    authenticateToken,
     idParamValidation,
     asyncHandler(async (req, res) => {
       const role = await roleModel.findById(req.params.id);
@@ -417,7 +401,6 @@ export const userController = {
   ],
   
   createRole: [
-    authenticateToken,
     requireRole(1),
     asyncHandler(async (req, res) => {
       const { name, description, permissions } = req.body;
@@ -439,7 +422,6 @@ export const userController = {
   ],
   
   updateRole: [
-    authenticateToken,
     requireRole(1),
     idParamValidation,
     asyncHandler(async (req, res) => {
@@ -473,7 +455,6 @@ export const userController = {
   ],
   
   getVerticals: [
-    authenticateToken,
     asyncHandler(async (req, res) => {
       const verticals = await verticalModel.findAll();
       successResponse(res, 200, { verticals });
@@ -481,7 +462,6 @@ export const userController = {
   ],
   
   seedDefaultRoles: [
-    authenticateToken,
     requireRole(1),
     asyncHandler(async (req, res) => {
       const count = await roleModel.seedDefaultRoles();
